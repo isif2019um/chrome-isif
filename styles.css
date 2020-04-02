@@ -1,0 +1,29 @@
+.container{
+    height: 100%;
+    width: 100%;
+    padding: 20px;
+    text-align: center;
+}
+
+header{
+   color: #FFFFFF;
+   height: 30px;
+   padding-top: 10px;
+   font-size: larger;
+   background-color: gray;
+}
+
+.main_body{
+    padding-top: 10px;
+    height: 550px;
+}
+footer{
+    background-color: black;
+    height: 30px;
+    padding-top: 5px;
+    font-size: medium ;
+    color: #ffffff;
+}
+table,th,td{
+    border: 1px solid black;
+}
