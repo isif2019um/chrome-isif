@@ -13,6 +13,15 @@ header{
    background-color: gray;
 }
 
+button, label {
+    margin-top: 5px;
+}
+
+input{
+    margin-top: 5px;
+    width:30%;
+}
+
 .main_body{
     padding-top: 10px;
     height: 550px;
