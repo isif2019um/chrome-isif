@@ -24,6 +24,8 @@ button, label {
 
 #showIP{
     display: inline-block;
+    max-height: 700px;
+    overflow-y: auto;
 }
 
 .search{
