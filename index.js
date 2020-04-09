@@ -1,5 +1,5 @@
 window.onload = function(){
-    
+    document.documentElement.scrollTop;
     //if (!document.getElementById) document.write('<link rel="stylesheet" type="text/css" href="styles.css">');
     
     document.getElementById("btnSubmit").onclick=function(){
@@ -42,12 +42,12 @@ window.onload = function(){
                 getApiData('https://rdap.db.ripe.net/ip/'+ip)
                 .then(res => {      
                     let ipInfo ='';
-                    ipInfo +="<table><tr><td>key</td><td>Value</td></tr>";
+                    ipInfo +="<table class='table table-hover'><thead><tr><th scope='col'>Key</th><th scope='col'>Value</th></tr></thead><tbody><tr class='table-active'><td>key</td><td>Value</td></tr>";
                     for (var key of Object.keys(res)) {
                         ipInfo +="<tr><td>"+key + " </td><td>" + res[key] + "</td></tr>"; 
                         //console.log(key + " -> " + p[key])
                     }
-                    ipInfo +="</table>";
+                    ipInfo +="</tbody></table>";
 
                     document.getElementById("showIP").innerHTML = ipInfo;
                     })
@@ -60,7 +60,7 @@ window.onload = function(){
                     getApiData('https://rdap.db.ripe.net/ip/'+res)
                     .then(res => {      
                         let ipInfo ='';
-                        ipInfo +="<table><tr><td>key</td><td>Value</td></tr>";
+                        ipInfo +="<table class='table table-hover'><tbody><tr class='table-active'><td>key</td><td>Value</td></tr>";
                         for (var key of Object.keys(res)) {
                             ipInfo +="<tr><td>"+key + " </td><td>" + res[key] + "</td></tr>"; 
                             //console.log(key + " -> " + p[key])
@@ -78,55 +78,5 @@ window.onload = function(){
             }
 
         }
-        
-        
-
-        // if(!_domain == "")
-        // {
-            
-        //     const domainValidityStatus = checkValidDomain(_domain);
-        //     console.log(domainValidityStatus);
-        //     if(domainValidityStatus){
-        //         console.log('Valid Domain:'+_domain);
-        //     }else{
-        //         console.log("Invalid Domain:"+_domain);
-        //     }
-
-
-        //     getIPofDomain(_domain)
-        //     .then(res => {                
-        //         getApiData('https://rdap.db.ripe.net/ip/'+res)
-        //         .then(res => {      
-        //             let ipInfo ='';
-        //             ipInfo +="<table><tr><td>key</td><td>Value</td></tr>";
-        //             for (var key of Object.keys(res)) {
-        //                 ipInfo +="<tr><td>"+key + " </td><td>" + res[key] + "</td></tr>"; 
-        //                 //console.log(key + " -> " + p[key])
-        //             }
-        //             ipInfo +="</table>";
-
-        //             document.getElementById("showIP").innerHTML = ipInfo;
-        //             })
-        //         .catch(err => {
-        //             document.getElementById("showIP").innerHTML = err;
-        //         })                
-        //     })
-        // } else if(!ip == ""){
-        //       getApiData('https://rdap.db.ripe.net/ip/'+ip)
-        //         .then(res => {      
-        //             let ipInfo ='';
-        //             ipInfo +="<table><tr><td>key</td><td>Value</td></tr>";
-        //             for (var key of Object.keys(res)) {
-        //                 ipInfo +="<tr><td>"+key + " </td><td>" + res[key] + "</td></tr>"; 
-        //                 //console.log(key + " -> " + p[key])
-        //             }
-        //             ipInfo +="</table>";
-
-        //             document.getElementById("showIP").innerHTML = ipInfo;
-        //             })
-        //         .catch(err => {
-        //             document.getElementById("showIP").innerHTML = err;
-        //         })
-        // }
     }
 }

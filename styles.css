@@ -3,6 +3,7 @@
     width: 100%;
     padding: 20px;
     text-align: center;
+    overflow-y: auto;
 }
 
 header{
@@ -17,15 +18,24 @@ button, label {
     margin-top: 5px;
 }
 
-input{
-    margin-top: 5px;
-    width:30%;
+#txtIP{
+    widows: 200px;
 }
+
+#showIP{
+    display: inline-block;
+}
+
+.search{
+   text-align: center;
+}
+
 
 .main_body{
     padding-top: 10px;
-    height: 550px;
+    
 }
+
 footer{
     background-color: black;
     height: 30px;
