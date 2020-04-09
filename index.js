@@ -1,8 +1,13 @@
 window.onload = function(){
-    document.documentElement.scrollTop;
+
     //if (!document.getElementById) document.write('<link rel="stylesheet" type="text/css" href="styles.css">');
     
     document.getElementById("btnSubmit").onclick=function(){
+        let _height = document.documentElement.clientHeight;
+        //let _height = document.body.clientHeight;
+        console.log(_height);
+        document.querySelector('.container').style.height = _height+'px';
+
         let ip      = document.getElementById("txtIP").value;
         // let _domain = document.getElementById("txtDomain").value;
         
