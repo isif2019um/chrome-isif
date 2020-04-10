@@ -1,7 +1,9 @@
 .container{
-    /* max-height: 100%; */
-    width: 100%;
-    padding: 20px;
+    max-height: 100%;
+    /* width: 100%; */
+    padding: 0px 15px;
+    min-height: 980px;
+    background-color:#eFeFeF;
     text-align: center;
     overflow-y: auto;
 }
@@ -18,12 +20,13 @@ button, label {
     margin-top: 5px;
 }
 
-#txtIP{
+/* #txtIP{
     widows: 200px;
-}
+} */
 
 #showIP{
     display: inline-block;
+    max-width: 600px;
     max-height: 700px;
     overflow-y: auto;
 }
