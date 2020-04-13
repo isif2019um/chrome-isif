@@ -26,7 +26,7 @@ button, label {
 
 #showIP{
     display: inline-block;
-    max-width: 600px;
+    width: 780px;
     max-height: 700px;
     overflow-y: auto;
 }

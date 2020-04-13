@@ -1,5 +1,6 @@
 window.onload = function(){
-
+    // initiatize the UI
+    const ui = new UI; 
     //if (!document.getElementById) document.write('<link rel="stylesheet" type="text/css" href="styles.css">');
     
     const submitButton = () => {
@@ -27,6 +28,11 @@ window.onload = function(){
                 var re = new RegExp(/^((?:(?:(?:\w[\.\-\+]?)*)\w)+)((?:(?:(?:\w[\.\-\+]?){0,62})\w)+)\.(\w{2,6})$/); 
                 return _domain.match(re);
             }
+
+            const checkValidIPV6 = ip =>{
+                var re = new RegExp(/((^\s*((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]))\s*$)|(^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$))/); 
+                return ip.match(re);
+            }
     
     
             async function getIPofDomain(_domain){
@@ -38,18 +44,49 @@ window.onload = function(){
             async function getApiData(url){
                 console.log(url);
                 const response = await fetch(url);
-                const jsondata = response.json();
+                const jsondata = await response.json();
                 return jsondata;                    
             }
-    
+
+            // fetch the ASN by passing the IP address
+            async function getASN(ip){
+                const response = await fetch(`https://ipapi.co/${ip}/json/`);
+                const data = await response.json();
+                return data.asn;    
+            }
+
+            
+            // fetch the nameserver of a domain
+            async function getNameServer(_domain){
+                const response = await fetch(`https://whoisapi-dns-lookup-v1.p.rapidapi.com/whoisserver/DNSService?outputFormat=json&domainname=${_domain}&type=NS", {
+                     "method": "GET",
+	                 "headers": {
+		             "x-rapidapi-host": "whoisapi-dns-lookup-v1.p.rapidapi.com",
+		             "x-rapidapi-key": "2a3fea56e4msh1b00b99becafde8p14848bjsn35688be8c23e"
+	                }}`);                
+                
+                const data = await response.json();
+                return data;    
+            }
+
+
             
             if(!ip == ""){
                 const ipValidityStatus = checkValidIP(ip);
-                if(ipValidityStatus){
+                const ip6ValidityStatus = checkValidIPV6(ip);
+                let asn ='';
+                if(ipValidityStatus || ip6ValidityStatus){
+                    // fetch the asn and display
+                    getASN(ip)
+                    .then(data=>{
+                          //ui.displayASN(data);
+                          asn = data; 
+                    });
                     getApiData('https://rdap.db.ripe.net/ip/'+ip)
                     .then(res => {      
                         let ipInfo ='';
-                        ipInfo +="<table class='table table-hover'><tbody><tr class='table-active'><td>key</td><td>Value</td></tr>";
+                        ipInfo +=`<table class='table table-hover'><thead><tr class='table-active'><td>key</td><td>Value</td></tr></thead><tbody>
+                        <tr><td>ASN</td><td>${asn}</td></tr>`;
                         for (var key of Object.keys(res)) {
                             ipInfo +="<tr><td>"+key + " </td><td>" + res[key] + "</td></tr>"; 
                             //console.log(key + " -> " + p[key])
@@ -62,12 +99,29 @@ window.onload = function(){
                         document.getElementById("showIP").innerHTML = err;
                     })
                 }else if(checkValidDomain(ip)){
+                    
+                    // fetch the domain nameserver
+                   // getNameServer(ip)
+                   //     .then(res=>{
+                     //       this.console.log(res);
+                    //});    
+                   
+
+
+                    // fetch the IP inforamtion by the domain IP
                     getIPofDomain(ip)
-                    .then(res => {                
+                    .then(res => {
+                        getASN(res)
+                        .then(data=>{
+                            //console.log(data);
+                            asn = data; 
+                        });
+                        
                         getApiData('https://rdap.db.ripe.net/ip/'+res)
                         .then(res => {      
                             let ipInfo ='';
-                            ipInfo +="<table class='table table-hover'><tbody><tr class='table-active'><td>key</td><td>Value</td></tr>";
+                            ipInfo +=`<table class='table table-hover'><thead><tr class='table-active'><td>key</td><td>Value</td></tr><thead><tbody>
+                            <tr><td>ASN</td><td>${asn}</td></tr>`;
                             for (var key of Object.keys(res)) {
                                 ipInfo +="<tr><td>"+key + " </td><td>" + res[key] + "</td></tr>"; 
                                 //console.log(key + " -> " + p[key])
@@ -81,7 +135,7 @@ window.onload = function(){
                         })                
                     }) 
                 }else{
-                    document.getElementById("showIP").innerHTML = "Invalid IP / Domain"+ip;
+                    document.getElementById("showIP").innerHTML = "Invalid IP / Domain "+ip;
                 }
     
             }
