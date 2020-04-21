@@ -98,7 +98,8 @@ async function runTests () {
 }
 
 // TODO: Proper testing.
-whois.connect().then(() => {
+whois.connect()
+.then(() => {
 })
 .then(runTests)
 .finally(() => {

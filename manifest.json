@@ -5,7 +5,7 @@
     "description": "This app is for know the rdap information",
     "author": "ISIF",
     "permissions" : [
-        
+        "webview"
     ],
     "icons":{
         "128": "rdap-128.png"

@@ -1,53 +1,5 @@
-.container{
-    max-height: 100%;
-    /* width: 100%; */
-    padding: 0px 15px;
-    min-height: 980px;
-    background-color:#eFeFeF;
-    text-align: center;
+.main-body{
+    min-height: 880px;
+    max-height: 980px;
     overflow-y: auto;
-}
-
-header{
-   color: #FFFFFF;
-   height: 30px;
-   padding-top: 10px;
-   font-size: larger;
-   background-color: gray;
-}
-
-button, label {
-    margin-top: 5px;
-}
-
-/* #txtIP{
-    widows: 200px;
-} */
-
-#showIP{
-    display: inline-block;
-    width: 780px;
-    max-height: 700px;
-    overflow-y: auto;
-}
-
-.search{
-   text-align: center;
-}
-
-
-.main_body{
-    padding-top: 10px;
-    
-}
-
-footer{
-    background-color: black;
-    height: 30px;
-    padding-top: 5px;
-    font-size: medium ;
-    color: #ffffff;
-}
-table,th,td{
-    border: 1px solid black;
 }
