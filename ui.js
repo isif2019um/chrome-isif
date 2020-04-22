@@ -20,11 +20,16 @@ class UI{
         let startAddress, endAddress, handle, parentHandle='Not Found', name;
         let type, port43, version, country='Not Found';
         let notices;
-        let noticeOutput;
-        let remarks, remarkOutput;
-        let entities, entityOutput;
-        let events, eventsOutput;
-        let links, linksOutput;
+        let noticeOutput='No notice available';
+        let remarks, remarkOutput='No remark available';
+        let entities, entityOutput='No entity available';
+        let events, eventsOutput='No event available';
+        let links, linksOutput='No link available';
+        let mainEvents, mainEventsOutput="No event available";
+        let mainLinks, mainLinksOutput="No link available";
+        let arinASN, arinASNOutput="Arin ASN not available";
+        let blocks, blocksOutput="Group not available";
+        let statuses, statusesOutput="Status not available";
 
         // iterate the value of the ip
         for (var key of Object.keys(res)) {
@@ -40,6 +45,14 @@ class UI{
             case 'name':
                 name = res[key];
                 break;
+            case 'status':
+                  statuses = res[key];
+                  statusesOutput ='';
+                  statuses.forEach(element => {
+                    statusesOutput += element + '<br>';
+                  });
+                  
+                  break;
             case 'type':
                 type = res[key];
                 break;
@@ -58,18 +71,39 @@ class UI{
             case 'country':
                 country = res[key];
                 break;
+            case 'arin_originas0_originautnums':
+                  arinASN = res[key];
+                  arinASNOutput ='';
+                  arinASN.forEach(element => {
+                    arinASNOutput +=element+"<br>";
+                            
+                  });
+                break;
+            
+            
+            case 'cidr0_cidrs':
+                  blocks = res[key];
+                  blocksOutput ='';
+                  blocks.forEach(element => {
+                    
+                    blocksOutput += element.v4prefix + '/' + element.length;
+                  });
+                  
+                  break;
+            
             case 'notices':
                 notices = res[key];
+                noticeOutput ='';
                 notices.forEach(element => {
                     
-                    
+                    //console.log(element);
                     //var obj = { first: "John", last: "Doe" };
                     // Visit non-inherited enumerable keys
-                    let notice;
+                    
                     Object.keys(element).forEach(function(notice) {
                         switch (notice) {
                             case 'title':
-                                noticeOutput += '<br><b>' + element[notice] + '</b>';
+                                noticeOutput += '<b>' + element[notice] + '</b>';
                                 break;
                             case 'description':
                                 noticeOutput += '<br>' + element[notice][0] + '<br>';
@@ -83,19 +117,22 @@ class UI{
                 break;
             case 'remarks':
                 remarks = res[key];
+                remarkOutput ='';
                 remarks.forEach(element => {
                 
                     // Visit non-inherited enumerable keys
                     let remark;
                     Object.keys(element).forEach(function(remark) {
                         switch (remark) {
-                            case 'description':
-                                remarkOutput += '<br>' + element[remark][0] + '<br>';
+                          case 'title':
+                            remarkOutput += '<br><b>' + element[remark] + '</b>';
+                            break;
+
+                          case 'description':
+                                remarkOutput += element[remark][0] + '<br>';
                                 break;
-                            case 'title':
-                                remarkOutput += '<br><b>' + element[remark] + '</b>';
-                                break;
-                            
+                          
+                                     
                             default:    
                         }
                     });
@@ -103,19 +140,76 @@ class UI{
                 });
                 
                 break;
+            case 'events':
+                  mainEvents = res[key];
+                  mainEventsOutput ='';
+                  mainEvents.forEach(element => {
+                  
+                      // Visit non-inherited enumerable keys
+                      let mainEvent;
+                      Object.keys(element).forEach(function(mainEvent) {
+                          switch (mainEvent) {
+                            case 'eventAction':
+                              mainEventsOutput += '<b>' + element[mainEvent] + '</b><br>';
+                              break;
+  
+                            case 'eventDate':
+                              mainEventsOutput += element[mainEvent] + '<br>';
+                              break;
+                         
+                            default:    
+                          }
+                      });
+                          
+                  });
+                  
+                  break;
+              case 'links':
+                    mainLinks = res[key];
+                    mainLinksOutput ='';
+                    mainLinks.forEach(element => {
+                    
+                        // Visit non-inherited enumerable keys
+                        //let mainLink;
+                        Object.keys(element).forEach(function(mainLink) {
+                            switch (mainLink) {
+                              case 'href':
+                                  mainLinksOutput += '<b> href: </b>' + element[mainLink] + '<br>';
+                                  break;
+                              case 'rel':
+                                  mainLinksOutput += '<b> rel: </b> ' + element[mainLink] + '<br>';
+                                  break;
+                              case 'type':
+                                  mainLinksOutput += '<b> type: </b> ' + element[mainLink] + '<br>';
+                                  break;
+                              case 'value':
+                                  let value = element[mainLink];
+                                  let valArray = value.split('/');
+                                  ip = valArray[valArray.length-1];
+                                  mainLinksOutput += '<b> value: </b> ' + value + '<br><br>';
+                                  break;     
+                           
+                              default:    
+                            }
+                        });
+                            
+                    });
+                    
+                    break;          
             case 'entities':
                 entities = res[key];
+                entityOutput='';
                 let entityNumber=0;
                 entities.forEach(element => {
                     entityNumber++;
-                    entityOutput +="<hr><h5>Entity Number: "+entityNumber+"<h5>";
+                    entityOutput +="<b>Entity Number: "+entityNumber+"</b>";
                     // Visit non-inherited enumerable keys
                     let entity;
                     Object.keys(element).forEach(function(entity) {
                         switch (entity) {
                             case 'events':
                                 events = element[entity];
-                                eventsOutput='';
+                                eventsOutput = '';
                                 //console.log(events.length);
                                 events.forEach(element => {
                                     //console.log('i am in event');
@@ -124,10 +218,10 @@ class UI{
                                     Object.keys(element).forEach(function(event) {
                                         switch (event) {
                                             case 'eventAction':
-                                                eventsOutput += '<br><b>' + element[event] + '<b>';
+                                                eventsOutput += '<b>' + element[event] + '</b><br>';
                                                 break;
                                             case 'eventDate':
-                                                eventsOutput += '<br>' + element[event];
+                                                eventsOutput += element[event] + '<br>';
                                                 break;
                                             
                                             default:    
@@ -136,7 +230,7 @@ class UI{
                                         
                                 });
 
-                                entityOutput += "<br>Event list"+ eventsOutput;  
+                                //entityOutput += "<hr><b>Event list</b><br>"+ eventsOutput;  
                                 break;
                             
                             case 'links':
@@ -150,16 +244,16 @@ class UI{
                                     Object.keys(element).forEach(function(link) {
                                         switch (link) {
                                             case 'href':
-                                                linksOutput += '<br><b>href: ' + element[link] + '<b>';
+                                                linksOutput += '<b> href: </b>' + element[link] + '<br>';
                                                 break;
                                             case 'rel':
-                                                linksOutput += '<br>rel: ' + element[link];
+                                                linksOutput += '<b> rel: </b> ' + element[link] + '<br>';
                                                 break;
                                             case 'type':
-                                                linksOutput += '<br>type: ' + element[link];
+                                                linksOutput += '<b> type: </b> ' + element[link] + '<br>';
                                                 break;
                                             case 'value':
-                                                linksOutput += '<br>value: ' + element[link];
+                                                linksOutput += '<b> value: </b> ' + element[link] + '<br>';
                                                 break;        
                                             
                                             default:    
@@ -168,19 +262,19 @@ class UI{
                                         
                                 });
 
-                                entityOutput += "<br>Link list<br>"+ linksOutput;  
+                                //entityOutput += "<hr><b>Link list</b><br>"+ linksOutput;  
                                 break;    
                             case 'handle':
                                 entityOutput += '<br><b>Handle:</b> ' + element[entity] + '<br>';
                                 break;
                             case 'objectClassName':
-                                entityOutput += '<br><b>Object Class Name:</b>' + element[entity] + '</b>';
+                                entityOutput += '<br><b>Object Class Name:</b> ' + element[entity] + '<br>';
                                 break;
                             
                             default:    
                         }
                     });
-                        
+                   entityOutput +="<hr><b>Event list</b><br>" + eventsOutput + "<hr><b>Link list</b><br>"+ linksOutput;     
                 });
                 
                 break;                                  
@@ -205,14 +299,11 @@ class UI{
                         <th scope="row">Net Range</th>
                         <td>${startAddress} - ${endAddress} </td>
                       </tr>
-                      <!--   <tr>
-                    //     <th scope="row">CIDR/ Route</th>
-                    //     <td>1.22.0.0/15 [ Array ]</td>
-                    //   </tr>
-                    //   <tr>
-                    //     <th scope="row">Organization</th>
-                    //     <td>GOGL [static]</td>
-                    //   </tr> -->
+                         
+                      <tr>
+                        <th scope="row">ASN</th>
+                        <td>${arinASNOutput}</td>
+                      </tr> 
                       <tr>
                         <th scope="row">Netname</th>
                         <td>${name}</td>
@@ -222,21 +313,17 @@ class UI{
                         <td>${country}</td>
                       </tr>
                       <tr>
+                        <th scope="row">Status</th>
+                        <td>${statusesOutput}</td>
+                      </tr>
+                      <tr>
                         <th scope="row">Type</th>
                         <td>${type}</td>
                       </tr>
-                      <!--   <tr>
-                    //     <th scope="row">Status</th>
-                    //     <td>REALLOCATION - Array</td>
-                    //   </tr>
-                    //   <tr>
-                    //     <th scope="row">Description</th>
-                    //     <td>Google [static]</td>
-                    //   </tr>
-                    //   <tr>
-                    //     <th scope="row">Origin</th>
-                    //     <td>AS15169 [static]</td>
-                    //   </tr> -->
+                      <tr>
+                        <th scope="row">Block</th>
+                        <td>${blocksOutput}</td>
+                      </tr>
                       <tr>
                         <th scope="row">Handle</th>
                         <td>${handle}</td>
@@ -248,6 +335,14 @@ class UI{
                       <tr>
                         <th scope="row">Port 43 Whois</th>
                         <td>${port43}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Events</th>
+                        <td>${mainEventsOutput}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Links</th>
+                        <td>${mainLinksOutput}</td>
                       </tr>
                       <tr>
                         <th scope="row">Notices</th>
