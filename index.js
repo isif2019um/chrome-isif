@@ -51,6 +51,13 @@ window.onload = function(){
             const data = await response.json();
             return data.asn;    
         }
+
+        // fetch the network information by passing the ASN address
+        async function getNetworkASN(asn){
+            const response = await fetch(`https://api.bgpview.io/asn/${asn}`);
+            const data = await response.json();
+            return data.data;    
+        }
         
         // fetch the nameserver of a domain
         async function getNameServer(_domain){
@@ -66,11 +73,11 @@ window.onload = function(){
             let asn ='';
             if(ipValidityStatus || ip6ValidityStatus){
                 // fetch the asn and display
-                getASN(ip)
-                .then(data=>{
-                        //ui.displayASN(data);
-                        asn = data; 
-                });
+                // getASN(ip)
+                // .then(data=>{
+                //         //ui.displayASN(data);
+                //         asn = data; 
+                // });
                 getApiData('https://rdap.db.ripe.net/ip/'+ip)
                 .then(res => {
                     ui.displayResult(res);
@@ -108,8 +115,18 @@ window.onload = function(){
                         document.getElementById("result").innerHTML = err;
                     })                
                 }) 
+            }else if (!isNaN(ip) || !isNaN(ip.substr(2,ip.length))){
+                getNetworkASN(ip)
+                .then(res => {
+                    ui.displayASNResult(res);
+                    })
+                .catch(err => {
+                        // ui.displayResult(err);
+                        document.getElementById("result").innerHTML = err;
+                })
+
             }else{
-                document.getElementById("showIP").innerHTML = "Invalid IP / Domain " + ip;
+                document.getElementById("result").innerHTML = "Invalid IP / Domain " + ip;
             }
     
         }

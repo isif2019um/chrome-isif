@@ -27,7 +27,7 @@ class UI{
         let links, linksOutput='No link available';
         let mainEvents, mainEventsOutput="No event available";
         let mainLinks, mainLinksOutput="No link available";
-        let arinASN, arinASNOutput="Arin ASN not available";
+        let arinASN, arinASNOutput="Not available";
         let blocks, blocksOutput="Group not available";
         let statuses, statusesOutput="Status not available";
 
@@ -523,6 +523,113 @@ class UI{
         </div> -->
         `;
 
+        document.getElementById('result').innerHTML=output;
+    }
+
+    displayASNResult(res){
+        console.log(res);
+        let ip = document.getElementById('txtIP').value;
+        let name='Not available';
+        let description_short= "Not available";
+        // let "description_full": [],
+        let country_code="Not available";
+        let website="Not available";
+        //"email_contacts": [],
+        //"abuse_contacts": [],
+        let looking_glass= 'Not available';
+        let traffic_estimation= "Not available";
+        let traffic_ratio="Not available";
+        // "owner_address": [],
+        // "rir_allocation": {},
+        // "iana_assignment": {},
+        let date_updated= "Not available";
+
+
+        for (var key of Object.keys(res)) {
+            
+          //const expr = key;
+          switch (key) {
+          case 'name':
+              name = res[key];
+              break;
+          case 'description_short':
+                description_short = res[key];
+                break;
+          case 'country_code':
+            country_code = res[key];
+            break;
+          case 'website':
+            website = res[key];
+              break;          
+          case 'looking_glass':
+            looking_glass = res[key];
+            break;
+          case 'traffic_estimation':
+            traffic_estimation = res[key];
+                break;
+          case 'traffic_ratio':
+            traffic_ratio = res[key];
+            break;
+          case 'date_updated':
+            date_updated = res[key];
+              break;  
+          case 'default':    
+          }
+        };
+        
+        let output =
+        `        <h3>Search Result</h3>
+        <div class="card bg-info text-white mt-2 mb-3">
+            <div class="card-header">Organization: ${name}</div>
+        </div>
+        <div class="card bg-light mt-2 mb-3">
+            <div class="card-header">Network Informations</div>
+            <div class="card-body">
+              <p class="card-text">
+                <div class="table-responsive">  
+                <table class="table table-hover">
+                    <tbody>
+                      <tr>
+                        <th scope="row">Name</th>
+                        <td>${name}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Short Description</th>
+                        <td>${description_short}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Country Code</th>
+                        <td>${country_code}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Website</th>
+                        <td>${website}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Looking Glass</th>
+                        <td>${looking_glass}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Traffic Estimation</th>
+                        <td>${traffic_estimation}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Traffic Ratio</th>
+                        <td>${traffic_ratio}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Updated Date</th>
+                        <td>${date_updated}</td>
+                      </tr>
+                         
+                      
+                    </tbody>
+                  </table>
+                </div>
+              </p>
+            </div>
+        </div> 
+        `;
         document.getElementById('result').innerHTML=output;
     }
 }
