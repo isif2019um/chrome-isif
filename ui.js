@@ -531,15 +531,15 @@ class UI{
         let ip = document.getElementById('txtIP').value;
         let name='Not available';
         let description_short= "Not available";
-        // let "description_full": [],
+        let description_full, description_fullDisplay="Not available";
         let country_code="Not available";
         let website="Not available";
-        //"email_contacts": [],
+        let email_contacts, email_contactsDisplay="Not available";
         //"abuse_contacts": [],
         let looking_glass= 'Not available';
         let traffic_estimation= "Not available";
         let traffic_ratio="Not available";
-        // "owner_address": [],
+        let owner_address, owner_addressDisplay="Not available";
         // "rir_allocation": {},
         // "iana_assignment": {},
         let date_updated= "Not available";
@@ -555,12 +555,30 @@ class UI{
           case 'description_short':
                 description_short = res[key];
                 break;
+          case 'description_full':
+            description_full = res[key];
+            description_fullDisplay='';
+            description_full.forEach(element => {
+              description_fullDisplay +=element+"<br>";
+                      
+            });
+            break;      
           case 'country_code':
             country_code = res[key];
             break;
           case 'website':
             website = res[key];
-              break;          
+              break;
+          case 'email_contacts':
+            email_contacts = res[key];
+            email_contactsDisplay='';
+            email_contacts.forEach(element => {
+              email_contactsDisplay +=element+"<br>";
+                      
+            });
+            break;
+            
+            
           case 'looking_glass':
             looking_glass = res[key];
             break;
@@ -570,6 +588,14 @@ class UI{
           case 'traffic_ratio':
             traffic_ratio = res[key];
             break;
+          case 'owner_address':
+            owner_address = res[key];
+            owner_addressDisplay ='';
+            owner_address.forEach(element => {
+              owner_addressDisplay +=element+"<br>";
+                      
+            });
+            break;  
           case 'date_updated':
             date_updated = res[key];
               break;  
@@ -598,12 +624,21 @@ class UI{
                         <td>${description_short}</td>
                       </tr>
                       <tr>
+                        <th scope="row">Full Description</th>
+                        <td>${description_fullDisplay}</td>
+                      </tr>
+                      
+                      <tr>
                         <th scope="row">Country Code</th>
                         <td>${country_code}</td>
                       </tr>
                       <tr>
                         <th scope="row">Website</th>
                         <td>${website}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Email Contacts</th>
+                        <td>${email_contactsDisplay}</td>
                       </tr>
                       <tr>
                         <th scope="row">Looking Glass</th>
@@ -617,6 +652,11 @@ class UI{
                         <th scope="row">Traffic Ratio</th>
                         <td>${traffic_ratio}</td>
                       </tr>
+                      <tr>
+                        <th scope="row">Owner Address</th>
+                        <td>${owner_addressDisplay}</td>
+                      </tr>
+                      
                       <tr>
                         <th scope="row">Updated Date</th>
                         <td>${date_updated}</td>
