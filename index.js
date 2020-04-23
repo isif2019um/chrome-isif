@@ -46,11 +46,11 @@ window.onload = function(){
         }
 
         // fetch the ASN by passing the IP address
-        async function getASN(ip){
-            const response = await fetch(`https://ipapi.co/${ip}/json/`);
-            const data = await response.json();
-            return data.asn;    
-        }
+        // async function getASN(ip){
+        //     const response = await fetch(`https://ipapi.co/${ip}/json/`);
+        //     const data = await response.json();
+        //     return data.asn;    
+        // }
 
         // fetch the network information by passing the ASN address
         async function getNetworkASN(asn){
@@ -99,11 +99,11 @@ window.onload = function(){
                 // fetch the IP inforamtion by the domain IP
                 getIPofDomain(ip)
                 .then(res => {
-                    getASN(res)
-                    .then(data=>{
-                        //console.log(data);
-                        asn = data; 
-                    });
+                    // getASN(res)
+                    // .then(data=>{
+                    //     //console.log(data);
+                    //     asn = data; 
+                    // });
                     
                     getApiData('https://rdap.db.ripe.net/ip/'+res)
                     .then(res => {
@@ -115,7 +115,7 @@ window.onload = function(){
                         document.getElementById("result").innerHTML = err;
                     })                
                 }) 
-            }else if (!isNaN(ip) || !isNaN(ip.substr(2,ip.length))){
+            }else if ((!isNaN(ip) && !isNaN(ip.substr(2,ip.length))) || (ip.length>2)){
                 getNetworkASN(ip)
                 .then(res => {
                     ui.displayASNResult(res);
@@ -126,7 +126,7 @@ window.onload = function(){
                 })
 
             }else{
-                document.getElementById("result").innerHTML = "Invalid IP / Domain " + ip;
+                document.getElementById("result").innerHTML = "::Invalid IPv4/IPv6/Domain/ASN::<br>Pls write the following ways:- <br><br> IPv4 - 1.23.42.12 <br>IPv6 - 2402:1980:249:43e3:bd55:7d09:414c:31c2<br>Domain - google.com<br>ASN - AS54540 or 54540" + ip;
             }
     
         }
