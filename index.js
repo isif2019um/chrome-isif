@@ -39,7 +39,7 @@ window.onload = function(){
         
         // fetch the rdap information of a specific ip
         async function getApiData(url){
-            console.log(url);
+            //console.log(url);
             const response = await fetch(url);
             const jsondata = await response.json();
             return jsondata;                    
@@ -89,12 +89,13 @@ window.onload = function(){
             }else if(checkValidDomain(ip)){
                 
                 // fetch the domain nameserver
+                let nsrecords="";
                 getNameServer(ip)
                     .then(res=>{
                         // this.console.log(res);
-                        const nsrecords = res.DNSData.dnsRecords; 
-                        this.console.log(nsrecords[0].additionalName);
-                        });    
+                        nsrecords = res.DNSData.dnsRecords; 
+                       // this.console.log(nsrecords[0].additionalName);
+                    });    
                 
                 // fetch the IP inforamtion by the domain IP
                 getIPofDomain(ip)
@@ -107,8 +108,8 @@ window.onload = function(){
                     
                     getApiData('https://rdap.db.ripe.net/ip/'+res)
                     .then(res => {
-                        ui.displayResult(res);
-                        
+                        ui.displayResult(res,nsrecords);
+                        //console.log(nsrecords);
                         })
                     .catch(err => {
                         ui.displayResult(res);

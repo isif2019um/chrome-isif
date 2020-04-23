@@ -14,23 +14,32 @@ class UI{
         
     }
 
-    displayResult(res){
+    displayResult(res,nsrecords=''){
        // console.log(res);
-        
+       let dnsOutput=''; 
+       // for dns information of a domain
+        if(nsrecords!=''){
+          dnsOutput='<tr><th scope="row">DNS Records</th><td>';
+          nsrecords.forEach(element => {
+            
+            // destructure the nsrecords
+
+            let {additionalName,dnsType,name,rRsetType,rawText,target,ttl,type} = element;
+                dnsOutput += `${rawText}<br>`;
+               // console.log(rawText);
+          });
+
+          dnsOutput +='</td></tr>';
+        } 
+
         // destructuring the res object
         let {arin_originas0_originautnums,country,cidr0_cidrs,endAddress,entities,events,remarks,handle,ipVersion,links,name,notices,objectClassName,parentHandle,port43,rdapConformance,startAddress,status,type} = res;
         
         let ip = document.getElementById('txtIP').value;
-        let noticeOutput='No notice available';
-        let remarkOutput='No remark available';
-        let entityOutput='No entity available';
-        let eventsOutput='No event available';
-        let linksOutput='No link available';
-        let mainEventsOutput="No event available";
-        let mainLinksOutput="No link available";
-        let arinASNOutput="ASN value not available";
-        let blocksOutput="Group not available";
-        let statusesOutput="Status not available";
+            
+
+        let noticeOutput,eventsOutput,linksOutput,entityOutput,mainEventsOutput,mainLinksOutput,arinASNOutput,blocksOutput,statusesOutput,remarkOutput;
+        noticeOutput=eventsOutput=linksOutput=entityOutput=mainEventsOutput=mainLinksOutput=arinASNOutput=blocksOutput=statusesOutput=remarkOutput='Not available';
 
         // for ASN number
         if(arin_originas0_originautnums != undefined){
@@ -164,6 +173,7 @@ class UI{
                 <div class="table-responsive">  
                 <table class="table table-hover">
                     <tbody>
+                      ${dnsOutput}
                       <tr>
                         <th scope="row">Net Range</th>
                         <td>${startAddress} - ${endAddress} </td>
@@ -237,7 +247,7 @@ class UI{
     }
 
     displayASNResult(res){
-        console.log(res);
+        //console.log(res);
         
         // destructuring the res object
         let {abuse_contacts,asn,country_code,date_updated,description_full,description_short,email_contacts,iana_assignment,looking_glass,name,owner_address,rir_allocation
