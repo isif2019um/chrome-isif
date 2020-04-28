@@ -1,6 +1,12 @@
 class UI{
     constructor(){
         const showIP = document.getElementById('showIP');
+        let entityArray=[];
+        let eventsOutput='';
+        let entryOutput='';
+        let entityOutput='';
+        //let getEntityList='';
+        let singleEntityValue='';
     }
     
     displayASN(message){
@@ -14,9 +20,62 @@ class UI{
         
     }
 
+    // for Entries List recursive
+     
+    getEntityList(entities){
+       console.log(entities);
+       //this.singleEntityValue +="i am";
+       this.entityArray=[];
+       entities.forEach(element => {
+         
+         let {events: eEvents,handle,links: eLinks,objectClassName,port43,roles,vcardArray,entities: r_entities}=element;
+        //  // for event list
+        //   if(eEvents != undefined){
+        //     this.eventsOutput =''; 
+        //     eEvents.forEach(event => {
+        //             // Destructure the single event
+        //             let {eventAction,eventDate}=event;
+        //             this.eventsOutput += '<b>' + eventAction + '</b><br>'+ eventDate + '<br><br>';
+        //       });
+        //   }
+
+          // for port43
+          if(port43 == undefined){
+            port43 ='Port43 not available';   
+          }
+
+          // for handle
+          if(handle == undefined){
+            handle ='Handle isnot available';   
+          }
+
+          //    // for link list
+          // if(eLinks != undefined){
+          //   let linksOutput =''; 
+          //   eLinks.forEach(link => {
+          //           // Destructure the single link
+          //         let {href:ehref,rel: erel,type: etype,value: evalue}=link;
+          //         linksOutput += `<b>href: </b>${ehref}<br><b>rel: </b>${erel}<br><b>type: </b> ${etype}<br><b>value: </b>${evalue}<br><br>`;
+          //     });
+          //  }
+
+            this.singleEntityValue += `<b>${handle}</b><br>${port43}<br><br><b>::Event List::</b><br><br><b>::Link List::</b><br><hr>`;
+          if(r_entities != 'undefined' && r_entities != null){
+              //console.log(r_entities+'i am un');
+              this.getEntityList(r_entities);
+          }
+          //this.entityArray.push(singleEntityValue);
+          this.entityArray.push(this.singleEntityValue);
+       });
+      //  console.log(this.entityArray);
+      //return this.entityArray;
+      return this.singleEntityValue; 
+    }
+
     displayResult(res,nsrecords=''){
-       // console.log(res);
-       let dnsOutput=''; 
+        console.log(res);
+       let dnsOutput='';
+        
        // for dns information of a domain
         if(nsrecords!=''){
           dnsOutput='<tr><th scope="row">DNS Records</th><td>';
@@ -123,7 +182,8 @@ class UI{
 
       // for entities list
       if(entities != undefined){
-        entityOutput=''; 
+        entityOutput='';
+        //entityOutput = this.getEntityList(entities); 
         let entityNumber=0;
         entities.forEach(element => {
           entityNumber++;
