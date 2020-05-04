@@ -23,6 +23,14 @@ window.onload = function(){
             var re = new RegExp(/((^\s*((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]))\s*$)|(^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$))/); 
             return ip.match(re);
         }
+
+        // check the vality of ASN
+        const checkValidASN = ip =>{
+            let reASN = new RegExp(/^([1-5]\d{4}|[1-9]\d{0,3}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])(\.([1-5]\d{4}|[1-9]\d{0,3}|6[0-4]\d{3}|65[0-4]\d{2}|655[0-2]\d|6553[0-5]|0))?$/);  
+            return ip.match(reASN);
+        }
+
+        
     
         // check the valid domain name
         const checkValidDomain = _domain =>{
@@ -54,6 +62,14 @@ window.onload = function(){
 
         // fetch the network information by passing the ASN address
         async function getNetworkASN(asn){
+            let res1 = asn.split(".");
+            //console.log(res1);
+            if(res1.length>1){
+                asn = parseInt(res1[0]*65536)+parseInt(res1[1]);
+            }else{
+                asn = parseInt(res1[0]);
+            }
+            
             const response = await fetch(`https://api.bgpview.io/asn/${asn}`);
             const data = await response.json();
             return data.data;    
@@ -116,7 +132,7 @@ window.onload = function(){
                         document.getElementById("result").innerHTML = err;
                     })                
                 }) 
-            }else if ((!isNaN(ip) && !isNaN(ip.substr(2,ip.length))) || (ip.length>2)){
+            }else if (checkValidASN(ip)){
                 getNetworkASN(ip)
                 .then(res => {
                     ui.displayASNResult(res);
@@ -127,7 +143,7 @@ window.onload = function(){
                 })
 
             }else{
-                document.getElementById("result").innerHTML = "::Invalid IPv4/IPv6/Domain/ASN::<br>Pls write the following ways:- <br><br> IPv4 - 1.23.42.12 <br>IPv6 - 2402:1980:249:43e3:bd55:7d09:414c:31c2<br>Domain - google.com<br>ASN - AS54540 or 54540" + ip;
+                document.getElementById("result").innerHTML = "::Invalid ASN/Domain/IPv4/IPv6/Name Sercer/:: <br>Pls write the following ways:- <br><br>ASN - 54540 or 1.23 <br>Domain - google.com<br>IPv4 - 1.23.42.12 <br>IPv6 - 2402:1980:249:43e3:bd55:7d09:414c:31c2<br>Name Server - ns1.google.com<br>" + ip;
             }
     
         }
