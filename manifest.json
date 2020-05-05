@@ -1,10 +1,10 @@
 {
     "manifest_version": 2,
     "name": "ISIF Whois-RDAP by UM",
-    "version":"1.1.1",
-    "description": "Update the validity of asn by using the latest RIRs method asdot. Like 1.1 asn number = 65537",
+    "version": "1.2",
+    "description": "Update the validity of asn by using the latest RIRs asdot method. Like 1.1 asn number = 65537 and update the design",
     "author": "ISIF-UM",
-    "browser_action":{
+    "browser_action": {
         "default_popup": "index.html",
         "default_icon": {
             "128": "isif-128.png"
