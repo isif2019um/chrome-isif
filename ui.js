@@ -78,7 +78,8 @@ class UI{
         
        // for dns information of a domain
         if(nsrecords!=''){
-          dnsOutput='<tr><th scope="row">DNS Records</th><td>';
+             
+          dnsOutput='<dt class="col-sm-3">DNS Records</dt><dd class="col-sm-9">';
           nsrecords.forEach(element => {
             
             // destructure the nsrecords
@@ -88,7 +89,7 @@ class UI{
                // console.log(rawText);
           });
 
-          dnsOutput +='</td></tr>';
+          dnsOutput +='</dd>';
         } 
 
         // destructuring the res object
@@ -219,87 +220,58 @@ class UI{
           entityOutput += `<b>${handle}</b><br>${port43}<br><br><b>::Event List::</b><br>${eventsOutput}<br><b>::Link List::</b><br>${linksOutput}<hr>`;
         });
       }
-
+        // <h3>Search Result</h3>
+        // <div class="card bg-info text-white mt-2 mb-3">
+        //     <div class="card-header">IP: ${ip} [${ipVersion}]</div>
+        // </div>
 
     let output = `
-        <h3>Search Result</h3>
-        <div class="card bg-info text-white mt-2 mb-3">
-            <div class="card-header">IP: ${ip} [${ipVersion}]</div>
-        </div>
         <div class="card bg-light mt-2 mb-3">
             <div class="card-header">Network Informations</div>
             <div class="card-body">
-              <p class="card-text">
-                <div class="table-responsive">  
-                <table class="table table-hover">
-                    <tbody>
-                      ${dnsOutput}
-                      <tr>
-                        <th scope="row">Net Range</th>
-                        <td>${startAddress} - ${endAddress} </td>
-                      </tr>
-                         
-                      <tr>
-                        <th scope="row">ASN</th>
-                        <td>${arinASNOutput}</td>
-                      </tr> 
-                      <tr>
-                        <th scope="row">Netname</th>
-                        <td>${name}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Country</th>
-                        <td>${country}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Status</th>
-                        <td>${statusesOutput}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Type</th>
-                        <td>${type}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Block</th>
-                        <td>${blocksOutput}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Handle</th>
-                        <td>${handle}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Parent</th>
-                        <td>${parentHandle}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Port 43 Whois</th>
-                        <td>${port43}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Events</th>
-                        <td>${mainEventsOutput}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Links</th>
-                        <td>${mainLinksOutput}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Notices</th>
-                        <td>${noticeOutput}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Remarks</th>
-                        <td>${remarkOutput}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Entities</th>
-                        <td>${entityOutput}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </p>
-            </div>
+
+            <dl class="row">
+            ${dnsOutput}
+            <dt class="col-sm-3">Net Range</dt>
+            <dd class="col-sm-9">${startAddress} - ${endAddress} </dd>
+
+            <dt class="col-sm-3">ASN</dt>
+            <dd class="col-sm-9">
+            ${arinASNOutput}
+            </dd>
+             
+            <dt class="col-sm-3">Netname</dt>
+            <dd class="col-sm-9">${name}</dd>
+
+            <dt class="col-sm-3 text-truncate">Country</dt>
+            <dd class="col-sm-9">${country}</dd>
+
+            <dt class="col-sm-3">Status</dt>
+            <dd class="col-sm-9">${statusesOutput}</dd>
+
+            <dt class="col-sm-3">Type</dt>
+            <dd class="col-sm-9">${type}</dd>
+            <dt class="col-sm-3">Block</dt>
+            <dd class="col-sm-9">${blocksOutput}</dd>
+            <dt class="col-sm-3">Handle</dt>
+            <dd class="col-sm-9">${handle}</dd>
+            <dt class="col-sm-3">Parent</dt>
+            <dd class="col-sm-9">${parentHandle}</dd>
+            
+            <dt class="col-sm-3">Port 43 Whois</dt>
+            <dd class="col-sm-9">${port43}</dd>
+            <dt class="col-sm-3">Events</dt>
+            <dd class="col-sm-9">${mainEventsOutput}</dd>
+            <dt class="col-sm-3">Links</dt>
+            <dd class="col-sm-9">${mainLinksOutput}</dd>
+            <dt class="col-sm-3">Notices</dt>
+            <dd class="col-sm-9">${noticeOutput}</dd>
+            <dt class="col-sm-3">Remarks</dt>
+            <dd class="col-sm-9">${remarkOutput}</dd>
+            <dt class="col-sm-3">Entities</dt>
+            <dd class="col-sm-9">${entityOutput}</dd>
+          </dl>
+                      
         </div>
          `;
 
@@ -339,81 +311,88 @@ class UI{
           owner_addressDisplay +=element+"<br>";                  
         });
         
+        //  <h3>Search Result</h3>
+        // <div class="card bg-info text-white mt-2 mb-3">
+        //     <div class="card-header">ASN: ${asn}</div>
+        // </div>
         let output =
-        `        <h3>Search Result</h3>
-        <div class="card bg-info text-white mt-2 mb-3">
-            <div class="card-header">ASN: ${asn}</div>
-        </div>
+        `       
         <div class="card bg-light mt-2 mb-3">
             <div class="card-header">Network Informations</div>
             <div class="card-body">
-              <p class="card-text">
-                <div class="table-responsive">  
-                <table class="table table-hover">
-                    <tbody>
-                      <tr>
-                        <th scope="row">Name</th>
-                        <td>${name}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Short Description</th>
-                        <td>${description_short}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Full Description</th>
-                        <td>${description_fullDisplay}</td>
-                      </tr>
-                      
-                      <tr>
-                        <th scope="row">Country Code</th>
-                        <td>${country_code}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Website</th>
-                        <td>${website}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Email Contacts</th>
-                        <td>${email_contactsDisplay}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Abuse Contacts</th>
-                        <td>${abuse_contactsDisplay}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Looking Glass</th>
-                        <td>${looking_glass}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Traffic Estimation</th>
-                        <td>${traffic_estimation}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Traffic Ratio</th>
-                        <td>${traffic_ratio}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Owner Address</th>
-                        <td>${owner_addressDisplay}</td>
-                      </tr>
-                      
-                      <tr>
-                        <th scope="row">Updated Date</th>
-                        <td>${date_updated}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">IANA Assignment</th>
-                        <td><b>Status</b> : ${assignment_status}<br><b>Assign Date</b> : ${date_assigned}<br><b>Description</b> : ${description}<br><b>Whois Server</b> : ${whois_server}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">RIR allocation</th>
-                        <td><b>Status</b> : ${allocation_status}<br><b>Country</b> : ${rir_country}<br><b>Allocation Date</b> : ${date_allocated}<br><b>RIR Name</b> : ${rir_name}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </p>
-            </div>
+                             
+              <dl class="row">
+                <dt class="col-sm-3">Name</dt>
+                <dd class="col-sm-9">${name}</dd>
+
+                <dt class="col-sm-3">Short Description</dt>
+                <dd class="col-sm-9">
+                     ${description_short}
+                </dd>
+
+                <dt class="col-sm-3">Full Description</dt>
+                <dd class="col-sm-9">${description_fullDisplay}</dd>
+
+                <dt class="col-sm-3 text-truncate">Country Code</dt>
+                <dd class="col-sm-9">${country_code}</dd>
+
+                <dt class="col-sm-3">Website</dt>
+                <dd class="col-sm-9">${website}</dd>
+
+                <dt class="col-sm-3">Email Contact</dt>
+                <dd class="col-sm-9">${email_contactsDisplay}</dd>
+                <dt class="col-sm-3">Abuse Contacts</dt>
+                <dd class="col-sm-9">${abuse_contactsDisplay}</dd>
+                <dt class="col-sm-3">Looking Glass</dt>
+                <dd class="col-sm-9">${looking_glass}</dd>
+                <dt class="col-sm-3">Traffic Estimation</dt>
+                <dd class="col-sm-9">${traffic_estimation}</dd>
+                <dt class="col-sm-3">Traffic Ratio</dt>
+                <dd class="col-sm-9">${traffic_ratio}</dd>
+                <dt class="col-sm-3">Owner Address</dt>
+                <dd class="col-sm-9">${owner_addressDisplay}</dd>
+                <dt class="col-sm-3">Updated Date</dt>
+                <dd class="col-sm-9">${date_updated}</dd>
+                <dt class="col-sm-3">IANA Assignment</dt>
+                <dd class="col-sm-9">
+                   <dl class="row">
+                      <dt class="col-sm-4">Status</dt>
+                      <dd class="col-sm-8">${assignment_status}</dd>
+                   </dl>
+                   <dl class="row">
+                      <dt class="col-sm-4">Assign Date</dt>
+                      <dd class="col-sm-8">${date_assigned}</dd>
+                   </dl>
+                   <dl class="row">
+                      <dt class="col-sm-4">Description</dt>
+                      <dd class="col-sm-8">${description}</dd>
+                   </dl>
+                   <dl class="row">
+                      <dt class="col-sm-4">Whois Server</dt>
+                      <dd class="col-sm-8">${whois_server}</dd>
+                   </dl>  
+                </dd>
+                <dt class="col-sm-3">RIR allocation</dt>
+                <dd class="col-sm-9">
+                   <dl class="row">
+                      <dt class="col-sm-4">Status</dt>
+                      <dd class="col-sm-8">${allocation_status}</dd>
+                   </dl>
+                   <dl class="row">
+                      <dt class="col-sm-4">Country</dt>
+                      <dd class="col-sm-8">${rir_country}</dd>
+                   </dl>
+                   <dl class="row">
+                      <dt class="col-sm-4">Allocation Date</dt>
+                      <dd class="col-sm-8">${date_allocated}</dd>
+                   </dl>
+                   <dl class="row">
+                      <dt class="col-sm-4">RIR Name</dt>
+                      <dd class="col-sm-8">${rir_name}</dd>
+                   </dl>  
+                </dd>
+              </dl>
+           </div>
         </div> 
         `;
         document.getElementById('result').innerHTML=output;
