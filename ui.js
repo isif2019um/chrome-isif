@@ -10,16 +10,14 @@ class UI{
     }
     
     displayASN(message){
-
         const div = document.createElement('div');
         div.className = 'col-5';
         const container = document.querySelector('.displayIP');
         const beforeThis = document.querySelector('#shopIP');
         container.appendChild(document.createTextNode(message));
         container.insertBefore(div.beforeThis);
-        
     }
-
+    
     // for Entries List recursive
      
     getEntityList(entities){
@@ -285,6 +283,8 @@ class UI{
         let {abuse_contacts,asn,country_code,date_updated,description_full,description_short,email_contacts,iana_assignment,looking_glass,name,owner_address,rir_allocation
         ,traffic_estimation,traffic_ratio,website} = res;
         
+        
+
         // destructuring the iana assignment object
         let {assignment_status,date_assigned,description,whois_server}= iana_assignment;
         
@@ -318,10 +318,12 @@ class UI{
         let output =
         `       
         <div class="card bg-light mt-2 mb-3">
-            <div class="card-header">Network Informations</div>
+            <div class="card-header bg-info">Network Informations</div>
             <div class="card-body">
                              
               <dl class="row">
+              <dt class="col-sm-3">ASN</dt>
+              <dd class="col-sm-9">${asn}</dd> 
                 <dt class="col-sm-3">Name</dt>
                 <dd class="col-sm-9">${name}</dd>
 

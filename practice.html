@@ -1,5 +1,92 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html> 
+<html> 
+<head> 
+    <title>Auto complete using Pure Javascript</title> 
+</head> 
+<body> 
+<script type="text/javascript"> 
+    var tags = [  
+    "Delhi", 
+    "Ahemdabad", 
+    "Punjab", 
+    "Uttar Pradesh", 
+    "Himachal Pradesh", 
+    "Karnatka", 
+    "Kerela", 
+    "Maharashtra", 
+    "Gujrat", 
+    "Rajasthan", 
+    "Bihar", 
+    "Tamil Nadu", 
+    "Haryana" 
+      ]; 
+  
+      /*list of available options*/ 
+     var n= tags.length; //length of datalist tags     
+  
+     function ac(value) { 
+        document.getElementById('datalist').innerHTML = ''; 
+         //setting datalist empty at the start of function 
+         //if we skip this step, same name will be repeated 
+           
+         l=value.length; 
+         //input query length 
+     for (var i = 0; i<n; i++) { 
+         if(((tags[i].toLowerCase()).indexOf(value.toLowerCase()))>-1) 
+         { 
+             //comparing if input string is existing in tags[i] string 
+  
+             var node = document.createElement("option"); 
+             var val = document.createTextNode(tags[i]); 
+              node.appendChild(val); 
+  
+               document.getElementById("datalist").appendChild(node); 
+                   //creating and appending new elements in data list 
+             } 
+         } 
+     } 
+   
+</script> 
+  
+<input type="text" list="datalist" onkeyup="ac(this.value)"> 
+<!-- On keyup calls the function everytime a key is released -->
+<datalist id="datalist"> 
+  
+<option value="Delhi"></option> 
+<option value="Ahemdabad"></option> 
+<option value="Punjab"></option> 
+<option value="Uttar Pradesh"></option> 
+<option value="Himachal Pradesh"></option> 
+<option value="Karnatka"></option> 
+<option value="Kerela"></option> 
+<option value="Maharashtra"></option> 
+<option value="Gujrat"></option> 
+<option value="Rajasthan"></option> 
+<option value="Bihar"></option> 
+<option value="Tamil Nadu"></option> 
+<option value="Haryana"></option> 
+  
+<!-- This data list will be edited through javascript     -->
+</datalist> 
+</body> 
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en" style="width:360px;min-height:600px;">
 <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,295 +95,170 @@
       <title>ISIF - WHOIS-RDAP</title>
       <link rel="icon" href="favicon.ico" type="image/ico">
       <link rel="icon" href="img/favicon-16x16.png" type="image/png">
+      
       <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
-      <style>
-          .main-body{
-              min-height: 780px;
-          }
-      </style>
+      <link rel="stylesheet" type="text/css" href="styles.css">
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 </head>
-<body>
-     <div class="container-fluid bg-danger border-bottom sticky-top">
-        <div class="container p-0">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <a class="navbar-brand" href="#">
-                    <img src="img/isif-logo.png" width="120" alt="ISIF-Asia">
-                  </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                  <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                  <ul class="nav navbar-nav ml-auto">
-                    <li class="nav-item active">
-                      <a class="nav-link" href="#">ISIF Asia - Home </a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="#">Features</a>
-                    </li>
-                  </ul>
-                  <form class="form-inline">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search ip/domain/asn" aria-label="Search">
-                    <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Search</button>
-                  </form>
-                </div>
-            </nav>
-        </div>
-    </div>
-    <div class="container main-body bg-light pt-10 border border-top-0 mb-50 border-danger">
+<body style="width:360px;min-height:600px;">
+     
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">
+            <img src="img/isif-logo.png" width="120" alt="ISIF-Asia">
+            </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>       
+    </nav>
+     
+    <div class="container main-body bg-light pt-10 border-top mb-50 border-danger">
         <div class="row">
-            <div class="col">
-                <div class="card bg-light mt-2 mb-3">
-                    <div class="card-header text-red">ISIF Asia - Whois/RDAP search</div>
-                    <div class="row card-body">
-                        <div class="col-4 pr-0"><input type="text" class="form-control" id="txtIP" aria-describedby="emailHelp" placeholder="Enter the IP address or Domain name" required></div>
-                        <div class="col-8 pl-2">
-                          <select class="form-control" id="ddOption">
-                              <option value="select">Select</option>
-                              <option value="asn">ASN</option>
-                              <option value="domain">Domain</option>
-                              <option value="ipv4">IPv4</option>
-                              <option value="ipv6">IPv6</option>
-                              <option value="ns">Name Server</option>
-                          </select>
-                          <button type="button" id="btnSubmit" class="btn btn-outline-danger">Search</button></div>           
-                    </div>
-                </div>
+          <div class="waveWrapper waveAnimation">
+            <div class="waveWrapperInner bgTop">
+              <div class="wave waveTop" style="background-image: url('http://front-end-noobs.com/jecko/img/wave-top.png')"></div>
             </div>
-            
+            <div class="waveWrapperInner bgMiddle">
+              <div class="wave waveMiddle" style="background-image: url('http://front-end-noobs.com/jecko/img/wave-mid.png')"></div>
+            </div>
+            <div class="waveWrapperInner bgBottom">
+              <div class="wave waveBottom" style="background-image: url('http://front-end-noobs.com/jecko/img/wave-bot.png')"></div>
+            </div>
+          </div>
+
+          
+            <div class="col search-part">
+                <div class="card bg-light mt-2 mb-3">
+                    <div class="card-header bg-info text-white">ISIF Asia - Whois/RDAP search</div>
+                    <div class="row card-body">
+                        
+                      <div class="input-group">
+                        
+                        <select class="form-control" id="ddOption">
+                          <option value="select">Select</option>
+                          <option value="asn">ASN</option>
+                          <option value="domain">Domain</option>
+                          <option value="ipv4">IPv4</option>
+                          <option value="ipv6">IPv6</option>
+                          <option value="ns">Name Server</option>
+                        </select>
+                        <input type="text" class="form-control" id="txtIP" aria-describedby="emailHelp" placeholder="ASN/Domain/IP/NS" required>
+                        <div class="input-group-prepend">
+                          <button class="btn btn-outline-danger" type="button"><span class="fas fa-search" aria-hidden="true"></span></button>
+                        </div>
+                      </div>
+                        <!-- <div class="col-4 pr-0">
+                             
+                        </div> 
+                         <input type="text" class="form-control" id="txtIP" aria-describedby="emailHelp" placeholder="ASN/Domain/IP/NS" required> 
+                        <div class="col-8">
+                          <div class="input-group md-form form-sm form-2 pl-0">
+                            <input class="form-control my-0 py-1 red-border" type="text" placeholder="Search" aria-label="Search">
+                            <div class="input-group-append">
+                              <span class="input-group-text red lighten-3" id="basic-text1"><i class="fas fa-search text-grey"
+                                  aria-hidden="true"></i></span>
+                            </div>
+                          </div>
+                        </div>            -->
+                    <!-- </div> -->
+                    <!-- <div class="row mx-auto">
+                        <div class="col mt-0 mb-3">
+                            <button type="button" id="btnSubmit" class="btn btn-outline-danger">Search</button>
+                        </div>           
+                    </div> 
+                </div>
+            </div>           
         </div>
         
-        <!-- <div class="d-flex justify-content-center">
-            <div class="card bg-light mt-2 mb-3">
-                <div class="card-header text-red">ISIF Asia - Whois/RDAP search</div>
-                <div class="card-body">
-                <input type="text" class="form-control" size="50" id="txtIP" aria-describedby="emailHelp" placeholder="Enter the IP address or Domain name" required>               
-                <button type="button" id="btnSubmit" class="btn btn-outline-danger mt-2">Search</button>
-                </div>
-            </div>
-        </div> -->
-        <div class="result" style="display: block;">
-            <h3>Search Result</h3>
-            <div class="card bg-info text-white">
-                <div class="card-body">
-                    <h6 class="card-title">Domain Name: google.com</h6>              
-                </div>
-            </div>
-            <div class="card bg-light mt-2 mb-3">
-                <div class="card-header">Network Informations</div>
-                <div class="card-body">
-                  <p class="card-text">
-                    <div class="table-responsive">  
-                    <table class="table table-hover">
-                        <tbody>
-                          <tr>
-                            <th scope="row">Net Range</th>
-                            <td>1.22.0.0 - 1.23.255.255</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">CIDR/ Route</th>
-                            <td>1.22.0.0/15</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Organization</th>
-                            <td>GOGL</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Netname</th>
-                            <td>LVLT-GOGL-8-8-8</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Status</th>
-                            <td>REALLOCATION</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Description</th>
-                            <td>Google</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Origin</th>
-                            <td>AS15169</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Parent</th>
-                            <td>not provided</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Port 43 Whois</th>
-                            <td>whois.apnic.net</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </p>
-                </div>
-            </div>
-            <div class="card bg-light mb-3">
-                <div class="card-header">Entity Informations</div>
-                <div class="card-body">
-                  
-                  <p class="card-text">
-                    <div class="table-responsive">  
-                        <table class="table table-hover table-bordered">
-                            <thead>
-                                <tr class="bg-light text-info">
-                                    <th colspan="2">ENTRY No 1</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                              <tr>
-                                <th scope="row">Kind</th>
-                                <td>Org</td>
-                              </tr>
-                              <tr>
-                                <th scope="row">Full Name</th>
-                                <td>Google LLC</td>
-                              </tr>
-                              <tr>
-                                <th scope="row">Handle</th>
-                                <td>GOGL</td>
-                              </tr>
-                              <tr>
-                                <th scope="row">Address</th>
-                                <td>1600 Amphitheatre Parkway
-                                    Mountain View
-                                    CA
-                                    94043
-                                    United States</td>
-                              </tr>
-                              <tr>
-                                <th scope="row">Roles</th>
-                                <td>Registrant</td>
-                              </tr>
-                              <tr>
-                                <th scope="row">Registration</th>
-                                <td>Thu, 30 Mar 2000 05:00:00 GMT (Thu Mar 30 2000 local time)</td>
-                              </tr>
-                              <tr>
-                                <th scope="row">Last Changed</th>
-                                <td>Thu, 31 Oct 2019 19:45:45 GMT (Fri Nov 01 2019 local time)</td>
-                              </tr>
-                              <tr>
-                                <th scope="row">Comments</th>
-                                <td>Please note that the recommended way to file abuse complaints are located in the following links.
-                                    To report abuse and illegal activity: https://www.google.com/contact/
-                                    For legal requests: http://support.google.com/legal
-                                    Regards,
-                                    The Google Team</td>
-                              </tr>
-                              <tr>
-                                  <th scope="row">Self</th>
-                                  <td>https://rdap.arin.net/registry/entity/GOGL</td>
-                              </tr>
-                              <tr>
-                                <th scope="row">Alternate</th>
-                                <td>https://whois.arin.net/rest/org/GOGL</td>
-                            </tr>
-                              <tr>
-                                <th scope="row">Port 43 Whois</th>
-                                <td>whois.apnic.net</td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
+        <div id="result">
+          <div class="card bg-light mt-2 mb-3">
+            <div class="card-header">Network Informations</div>
+            <div class="card-body">
+                             
+              <dl class="row">
+              <dt class="col-sm-3">ASN</dt>
+              <dd class="col-sm-9">53322</dd> 
+                <dt class="col-sm-3">Name</dt>
+                <dd class="col-sm-9">NEt share</dd>
 
-                  </p>
+                <dt class="col-sm-3">Short Description</dt>
+                <dd class="col-sm-9">
+                     Short description
+                </dd>
 
-                  
-                  <p class="card-text">
-                    <div class="table-responsive">  
-                        <table class="table table-hover table-bordered">
-                            <tbody>
-                              <thead>
-                                    <tr class="bg-light text-info">
-                                        <th colspan="2">ENTRY No 2</th>
-                                    </tr>
-                              </thead>
-                              <tr>
-                                <th scope="row">Kind</th>
-                                <td>Group</td>
-                              </tr>
-                              <tr>
-                                <th scope="row">Full Name</th>
-                                <td>Abuse</td>
-                              </tr>
+                <dt class="col-sm-3">Full Description</dt>
+                <dd class="col-sm-9">Full Descriotion</dd>
 
-                              <tr>
-                                <th scope="row">Handle</th>
-                                <td>ABUSE5250-ARIN</td>
-                              </tr>
-                              <tr>
-                                <th scope="row">Email</th>
-                                <td>network-abuse@google.com</td>
-                              </tr>
-                              <tr>
-                                <th scope="row">Telephone</th>
-                                <td>+1-650-253-0000</td>
-                              </tr>
-                              <tr>
-                                <th scope="row">Organization</th>
-                                <td>Abuse</td>
-                              </tr>
-                              
-                              <tr>
-                                <th scope="row">Address</th>
-                                <td>1600 Amphitheatre Parkway
-                                    Mountain View
-                                    CA
-                                    94043
-                                    United States</td>
-                              </tr>
-                              <tr>
-                                <th scope="row">Roles</th>
-                                <td>Registrant</td>
-                              </tr>
-                              <tr>
-                                <th scope="row">Registration</th>
-                                <td>Thu, 30 Mar 2000 05:00:00 GMT (Thu Mar 30 2000 local time)</td>
-                              </tr>
-                              <tr>
-                                <th scope="row">Last Changed</th>
-                                <td>Thu, 31 Oct 2019 19:45:45 GMT (Fri Nov 01 2019 local time)</td>
-                              </tr>
-                              <tr>
-                                <th scope="row">Comments</th>
-                                <td>Please note that the recommended way to file abuse complaints are located in the following links.
-                                    To report abuse and illegal activity: https://www.google.com/contact/
-                                    For legal requests: http://support.google.com/legal
-                                    Regards,
-                                    The Google Team</td>
-                              </tr>
-                              <tr>
-                                <th scope="row">Unvalidated POC</th>
-                                <td>ARIN has attempted to validate the data for this POC, but has received no response from the POC since 2019-10-24</td>
-                            </tr>
-                              
-                            <tr>
-                                  <th scope="row">Self</th>
-                                  <td>https://rdap.arin.net/registry/entity/GOGL</td>
-                            </tr>
-                              <tr>
-                                <th scope="row">Alternate</th>
-                                <td>https://whois.arin.net/rest/org/GOGL</td>
-                            </tr>
-                              <tr>
-                                <th scope="row">Port 43 Whois</th>
-                                <td>whois.apnic.net</td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
+                <dt class="col-sm-3 text-truncate">Country Code</dt>
+                <dd class="col-sm-9">US</dd>
 
-                  </p>
-                </div>
-            </div>
-        </div>    
+                <dt class="col-sm-3">Website</dt>
+                <dd class="col-sm-9">www.arinacom</dd>
+
+                <dt class="col-sm-3">Email Contact</dt>
+                <dd class="col-sm-9">test.g@gmail.com</dd>
+                <dt class="col-sm-3">Abuse Contacts</dt>
+                <dd class="col-sm-9">Nazrul islam</dd>
+                <dt class="col-sm-3">Looking Glass</dt>
+                <dd class="col-sm-9">Not Available</dd>
+                <dt class="col-sm-3">Traffic Estimation</dt>
+                <dd class="col-sm-9">100GB</dd>
+                <dt class="col-sm-3">Traffic Ratio</dt>
+                <dd class="col-sm-9">20GB</dd>
+                <dt class="col-sm-3">Owner Address</dt>
+                <dd class="col-sm-9">Mohammadpur</dd>
+                <dt class="col-sm-3">Updated Date</dt>
+                <dd class="col-sm-9">2013-12-23</dd>
+                <dt class="col-sm-3">IANA Assignment</dt>
+                <dd class="col-sm-9">
+                   <dl class="row">
+                      <dt class="col-sm-4">Status</dt>
+                      <dd class="col-sm-8">Active</dd>
+                   </dl>
+                   <dl class="row">
+                      <dt class="col-sm-4">Assign Date</dt>
+                      <dd class="col-sm-8">2013-12-23</dd>
+                   </dl>
+                   <dl class="row">
+                      <dt class="col-sm-4">Description</dt>
+                      <dd class="col-sm-8">description</dd>
+                   </dl>
+                   <dl class="row">
+                      <dt class="col-sm-4">Whois Server</dt>
+                      <dd class="col-sm-8">ns2.webserver.com</dd>
+                   </dl>  
+                </dd>
+                <dt class="col-sm-3">RIR allocation</dt>
+                <dd class="col-sm-9">
+                   <dl class="row">
+                      <dt class="col-sm-4">Status</dt>
+                      <dd class="col-sm-8">Active</dd>
+                   </dl>
+                   <dl class="row">
+                      <dt class="col-sm-4">Country</dt>
+                      <dd class="col-sm-8">US</dd>
+                   </dl>
+                   <dl class="row">
+                      <dt class="col-sm-4">Allocation Date</dt>
+                      <dd class="col-sm-8">2012-12-32</dd>
+                   </dl>
+                   <dl class="row">
+                      <dt class="col-sm-4">RIR Name</dt>
+                      <dd class="col-sm-8">arin.com</dd>
+                   </dl>  
+                </dd>
+              </dl>
+           </div>
+        </div>
+
+        </div>
+        <div class="lds-hourglass" style="display: none;"></div>    
     </div>
     <div class="container-fluid bg-dark mt-50 text-white p-2 fixed-bottom">
         <div class="container" style="text-align: center;">
          &copy ISIF 2020.
         </div>
     </div>  
-    
     <script src="practice.js"></script>
+    <script src="index.js"></script>
 </body>
-</html>
+</html> -->

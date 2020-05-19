@@ -6,6 +6,8 @@ window.onload = function(){
     const submitButton = () => {
         // get the input value    
         let ip      = document.getElementById("txtIP").value;
+        // const loader = document.querySelector('#lds-hourglass');
+        // const result = document.querySelector('result');
                         
         // check the validity of ipv4 
         const checkValidIP = ip =>{
@@ -70,8 +72,10 @@ window.onload = function(){
                 asn = parseInt(res1[0]);
             }
             
+           // document.getElementsByClassName('lds-hourglass').style.display='block';
             const response = await fetch(`https://api.bgpview.io/asn/${asn}`);
             const data = await response.json();
+           // document.getElementsByClassName('lds-hourglass').style.display='none';
             return data.data;    
         }
         
@@ -148,10 +152,72 @@ window.onload = function(){
     
         }
     }
+
+    function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for(var i = 0; i < ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+          }
+          if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+          }
+        }
+        return "";
+    }
+
+    function setCookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        var expires = "expires="+d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+
+    function checkCookie() {
+        var user = getCookie("username");
+        if (user != "") {
+          alert("Welcome again " + user);
+        } else {
+          user = prompt("Please enter your name:", "");
+          if (user != "" && user != null) {
+            setCookie("username", user, 365);
+          }
+        }
+    }
     
     var input      = document.getElementById("txtIP");
     
+    // for auto suggestion
+  
+    // localStorage.removeItem("lsSuggestedItems");
     
+    // for localstorage / sessionstorage
+    var retrievedData = localStorage.getItem("lsSuggestedItems");
+    // var retrievedData = sessionStorage.getItem("lsSuggestedItems");
+    var tetrievedSuggestedItems = JSON.parse(retrievedData);
+
+    // for cookies
+    setCookie("lsSuggestedItems","bengalfoundation.org", 2);
+    var retrievedData = getCookie("lsSuggestedItems");
+
+    console.log("from cookie:",retrievedData);
+
+    // end cookies
+
+    let list = document.getElementById('suggestionList');
+    
+    //console.log('local storage', tetrievedSuggestedItems);
+    if(tetrievedSuggestedItems){
+        tetrievedSuggestedItems.forEach(function(item){
+            let option = document.createElement('option');
+            option.value = item;
+            list.appendChild(option);
+        });
+    }
+    
+    // close for auto suggestion 
     
     
     //let inputValue = document.getElementById("txtIP").value;
@@ -183,11 +249,56 @@ window.onload = function(){
 
         if (event.keyCode === 13) {
             event.preventDefault();
-            //console.log('i am in enter');
+            
+            //  add value to localstorage
+            let inputValue = input.value;
+            addLocalStorage(inputValue, tetrievedSuggestedItems);
+            
             submitButton();           
         }       
     });
     document.getElementById("btnSubmit").onclick=function(){
+        let inputValue = input.value;
+        // add value to localstorage
+        addLocalStorage(inputValue, tetrievedSuggestedItems);
+
         submitButton();
+    }
+
+    // add value to localstorage
+    function addLocalStorage(value, tetrievedSuggestedItems){
+        //let mySuggestedItems = [];
+        if(tetrievedSuggestedItems){
+            if(!tetrievedSuggestedItems.includes(value)){
+                tetrievedSuggestedItems.unshift(value);
+                //console.log("local list", tetrievedSuggestedItems);
+                //localStorage.setItem("lsSuggestedItems", JSON.stringify(tetrievedSuggestedItems));
+                sessionStorage.setItem("lsSuggestedItems", JSON.stringify(tetrievedSuggestedItems));
+                reloadDdl(tetrievedSuggestedItems);      
+            }
+        }else{
+            let tetrievedSuggestedItems = [];
+            tetrievedSuggestedItems.unshift(value);
+            console.log("Empty List", tetrievedSuggestedItems);
+            //localStorage.setItem("lsSuggestedItems", JSON.stringify(tetrievedSuggestedItems));
+            sessionStorage.setItem("lsSuggestedItems", JSON.stringify(tetrievedSuggestedItems));
+            reloadDdl(tetrievedSuggestedItems); 
+        }
+        
+    }
+
+    // reload the dropdownlist of search items
+    function reloadDdl(tetrievedSuggestedItems){
+
+        let list = document.getElementById('suggestionList');
+        list.innerHTML = "";
+        //console.log('local storage', tetrievedSuggestedItems);
+        if(tetrievedSuggestedItems){
+            tetrievedSuggestedItems.forEach(function(item){
+                let option = document.createElement('option');
+                option.value = item;
+                list.appendChild(option);
+            });
+        }
     }
 }
