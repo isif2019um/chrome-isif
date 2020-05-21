@@ -1,8 +1,8 @@
 {
     "manifest_version": 2,
     "name": "ISIF Whois-RDAP by UM",
-    "version": "1.2.2",
-    "description": "New outlook and local storage uses.",
+    "version": "1.2.3",
+    "description": "Cookies added.",
     "author": "ISIF-UM",
     "browser_action": {
         "default_popup": "index.html",
