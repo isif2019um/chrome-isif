@@ -71,7 +71,7 @@ class UI{
     }
 
     displayResult(res,nsrecords=''){
-        console.log(res);
+       // console.log(res);
        let dnsOutput='';
         
        // for dns information of a domain

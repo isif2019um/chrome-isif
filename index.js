@@ -92,20 +92,21 @@ window.onload = function(){
             const ip6ValidityStatus = checkValidIPV6(ip);
             let asn ='';
             if(ipValidityStatus || ip6ValidityStatus){
-                // fetch the asn and display
-                // getASN(ip)
-                // .then(data=>{
-                //         //ui.displayASN(data);
-                //         asn = data; 
-                // });
+                let response = checkCookie(ip,tetrievedSuggestedItems);
+                
+                if(response){
+                    ui.displayResult(response);
+                }else{
                 getApiData('https://rdap.db.ripe.net/ip/'+ip)
-                .then(res => {
-                    ui.displayResult(res);
+                    .then(res => {
+                        ui.displayResult(res);
+                        addCookieObject(ip, res, tetrievedSuggestedItems);
+                        })
+                    .catch(err => {
+                            // ui.displayResult(err);
+                            document.getElementById("result").innerHTML = err;
                     })
-                .catch(err => {
-                        // ui.displayResult(err);
-                        document.getElementById("result").innerHTML = err;
-                })
+               }
             }else if(checkValidDomain(ip)){
                 
                 // fetch the domain nameserver
@@ -114,22 +115,22 @@ window.onload = function(){
                     .then(res=>{
                         // this.console.log(res);
                         nsrecords = res.DNSData.dnsRecords; 
-                       // this.console.log(nsrecords[0].additionalName);
+                       //console.log(nsrecords[0].additionalName);
                     });    
                 
                 // fetch the IP inforamtion by the domain IP
                 getIPofDomain(ip)
-                .then(res => {
-                    // getASN(res)
-                    // .then(data=>{
-                    //     //console.log(data);
-                    //     asn = data; 
-                    // });
-                    
+                .then(res => {                    
                     getApiData('https://rdap.db.ripe.net/ip/'+res)
                     .then(res => {
-                        ui.displayResult(res,nsrecords);
-                        //console.log(nsrecords);
+                        ui.displayResult(res, nsrecords);
+                        // console.log("NSRECORDS:" + nsrecords);
+                        // let domainandnsrecord = {
+                        //     "nsrecord": nsrecords,
+                        //     "wrdprecord": res  
+                        // }
+                        // console.log("response:" + domainandnsrecord);
+                        addCookieObject(ip, ip, tetrievedSuggestedItems);
                         })
                     .catch(err => {
                         ui.displayResult(res);
@@ -137,14 +138,23 @@ window.onload = function(){
                     })                
                 }) 
             }else if (checkValidASN(ip)){
-                getNetworkASN(ip)
-                .then(res => {
-                    ui.displayASNResult(res);
+                let response = checkCookie(ip,tetrievedSuggestedItems);
+                
+                if(response){
+                    ui.displayASNResult(response);
+                }else{
+                    getNetworkASN(ip)
+                    .then(res => {
+                        ui.displayASNResult(res);
+                        //console.log("ASN:" + res);
+                        addCookieObject(ip, res, tetrievedSuggestedItems);
+                        })
+                    .catch(err => {
+                            // ui.displayResult(err);
+                            document.getElementById("result").innerHTML = err;
                     })
-                .catch(err => {
-                        // ui.displayResult(err);
-                        document.getElementById("result").innerHTML = err;
-                })
+                }
+                
 
             }else{
                 document.getElementById("result").innerHTML = "::Invalid ASN/Domain/IPv4/IPv6/Name Sercer/:: <br>Pls write the following ways:- <br><br>ASN - 54540 or 1.23 <br>Domain - google.com<br>IPv4 - 1.23.42.12 <br>IPv6 - 2402:1980:249:43e3:bd55:7d09:414c:31c2<br>Name Server - ns1.google.com<br>" + ip;
@@ -170,20 +180,115 @@ window.onload = function(){
 
     function setCookie(cname, cvalue, exdays) {
         var d = new Date();
+        
+        let retrievedData = getCookie("lsSuggestedItems");
+        //console.log(retrievedData);
+        if(retrievedData){
+            var tetrievedSuggestedItems = JSON.parse(retrievedData);
+            if(Object.keys(tetrievedSuggestedItems).length>2){
+                // var obj = { 'bar' : 'baz' }
+                var key = Object.keys(tetrievedSuggestedItems)[2];
+                //var value = tetrievedSuggestedItems[key];
+                delete tetrievedSuggestedItems[key];
+                document.cookie = cname + "=" + JSON.stringify(tetrievedSuggestedItems) + ";" + expires + ";path=/";
+            }
+            console.log("length:"+Object.keys(tetrievedSuggestedItems).length);
+        }
+
+        //console.log("cvalue" + cvalue);
         d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
         var expires = "expires="+d.toUTCString();
         document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        //console.log("document cookies:" + document.cookie);
     }
 
-    function checkCookie() {
-        var user = getCookie("username");
-        if (user != "") {
-          alert("Welcome again " + user);
-        } else {
-          user = prompt("Please enter your name:", "");
-          if (user != "" && user != null) {
-            setCookie("username", user, 365);
-          }
+    function checkCookie(checkIP, stockList) {
+        if (checkIP in stockList){
+            return stockList[checkIP];
+        }else{
+            return false;
+        }
+    }
+
+    // add value to Cookie
+    function addCookieObject(key, value, tetrievedSuggestedItems){
+        //let mySuggestedItems = [];
+        //console.log("Add cookies" + key, value, tetrievedSuggestedItems);
+        if(Object.getOwnPropertyNames(tetrievedSuggestedItems).length === 0){
+            //is empty
+            let tetrievedSuggestedItems = {};
+            tetrievedSuggestedItems[key] = value;
+            // console.log("Empty List", tetrievedSuggestedItems);
+            //localStorage.setItem("lsSuggestedItems", JSON.stringify(tetrievedSuggestedItems));
+            setCookie("lsSuggestedItems", JSON.stringify(tetrievedSuggestedItems),2);
+            reloadDdl(tetrievedSuggestedItems);
+        }else{
+            //if(tetrievedSuggestedItems.hasOwnProperty(key)){
+                tetrievedSuggestedItems[key] = value;
+                // console.log("Append", tetrievedSuggestedItems);
+                setCookie("lsSuggestedItems", JSON.stringify(tetrievedSuggestedItems), 2);
+                reloadDdl(tetrievedSuggestedItems);      
+           // }
+        }
+        
+    }
+
+
+    // add value to Cookie
+    function addCookie(value, tetrievedSuggestedItems){
+        //let mySuggestedItems = [];
+        if(tetrievedSuggestedItems){
+            if(!tetrievedSuggestedItems.includes(value)){
+                tetrievedSuggestedItems.unshift(value);
+                setCookie("lsSuggestedItems", JSON.stringify(tetrievedSuggestedItems),2);
+                reloadDdl(tetrievedSuggestedItems);      
+            }
+        }else{
+            let tetrievedSuggestedItems = [];
+            tetrievedSuggestedItems.unshift(value);
+            //console.log("Empty List", tetrievedSuggestedItems);
+            //localStorage.setItem("lsSuggestedItems", JSON.stringify(tetrievedSuggestedItems));
+            setCookie("lsSuggestedItems", JSON.stringify(tetrievedSuggestedItems),2);
+            reloadDdl(tetrievedSuggestedItems); 
+        }
+        
+    }
+
+    // add value to localstorage
+    function addLocalStorage(value, tetrievedSuggestedItems){
+        //let mySuggestedItems = [];
+        if(tetrievedSuggestedItems){
+            if(!tetrievedSuggestedItems.includes(value)){
+                tetrievedSuggestedItems.unshift(value);
+                //console.log("local list", tetrievedSuggestedItems);
+                //localStorage.setItem("lsSuggestedItems", JSON.stringify(tetrievedSuggestedItems));
+                sessionStorage.setItem("lsSuggestedItems", JSON.stringify(tetrievedSuggestedItems));
+                reloadDdl(tetrievedSuggestedItems);      
+            }
+        }else{
+            let tetrievedSuggestedItems = [];
+            tetrievedSuggestedItems.unshift(value);
+            console.log("Empty List", tetrievedSuggestedItems);
+            //localStorage.setItem("lsSuggestedItems", JSON.stringify(tetrievedSuggestedItems));
+            sessionStorage.setItem("lsSuggestedItems", JSON.stringify(tetrievedSuggestedItems));
+            reloadDdl(tetrievedSuggestedItems); 
+        }
+        
+    }
+
+    // reload the dropdownlist of search items
+    function reloadDdl(tetrievedSuggestedItems){
+
+        let list = document.getElementById('suggestionList');
+        list.innerHTML = "";
+        //console.log('local storage', tetrievedSuggestedItems);
+        if(tetrievedSuggestedItems){
+            var tetrievedSuggestedItemsArray = Object.keys(tetrievedSuggestedItems);
+            tetrievedSuggestedItemsArray.forEach(function(item){
+                let option = document.createElement('option');
+                option.value = item;
+                list.appendChild(option);
+            });
         }
     }
     
@@ -194,15 +299,27 @@ window.onload = function(){
     // localStorage.removeItem("lsSuggestedItems");
     
     // for localstorage / sessionstorage
-    var retrievedData = localStorage.getItem("lsSuggestedItems");
+    //var retrievedData = localStorage.getItem("lsSuggestedItems");
     // var retrievedData = sessionStorage.getItem("lsSuggestedItems");
-    var tetrievedSuggestedItems = JSON.parse(retrievedData);
+    //var tetrievedSuggestedItems = JSON.parse(retrievedData);
 
-    // for cookies
-    setCookie("lsSuggestedItems","bengalfoundation.org", 2);
+    //for cookies
+
+    // for reset cookies values
+    // setCookie("lsSuggestedItems","",1);
+    //var inputArray = ['bengalfoundation.org'];
+    //setCookie("lsSuggestedItems",JSON.stringify(inputArray), 2);
     var retrievedData = getCookie("lsSuggestedItems");
+    //console.log(retrievedData);
+    if(retrievedData){
+        var tetrievedSuggestedItems = JSON.parse(retrievedData);
+    }else{
+        var tetrievedSuggestedItems = {};
+    }
 
-    console.log("from cookie:",retrievedData);
+    
+
+    //console.log("from cookie:",retrievedData);
 
     // end cookies
 
@@ -210,7 +327,8 @@ window.onload = function(){
     
     //console.log('local storage', tetrievedSuggestedItems);
     if(tetrievedSuggestedItems){
-        tetrievedSuggestedItems.forEach(function(item){
+        var tetrievedSuggestedItemsArray = Object.keys(tetrievedSuggestedItems);
+        tetrievedSuggestedItemsArray.forEach(function(item){
             let option = document.createElement('option');
             option.value = item;
             list.appendChild(option);
@@ -252,7 +370,10 @@ window.onload = function(){
             
             //  add value to localstorage
             let inputValue = input.value;
-            addLocalStorage(inputValue, tetrievedSuggestedItems);
+            //addLocalStorage(inputValue, tetrievedSuggestedItems);
+            
+            // for add cookie
+            //addCookie(inputValue, tetrievedSuggestedItems);
             
             submitButton();           
         }       
@@ -260,45 +381,11 @@ window.onload = function(){
     document.getElementById("btnSubmit").onclick=function(){
         let inputValue = input.value;
         // add value to localstorage
-        addLocalStorage(inputValue, tetrievedSuggestedItems);
+        // addLocalStorage(inputValue, tetrievedSuggestedItems);
+
+        // for add cookie
+        // addCookie(inputValue, tetrievedSuggestedItems);
 
         submitButton();
-    }
-
-    // add value to localstorage
-    function addLocalStorage(value, tetrievedSuggestedItems){
-        //let mySuggestedItems = [];
-        if(tetrievedSuggestedItems){
-            if(!tetrievedSuggestedItems.includes(value)){
-                tetrievedSuggestedItems.unshift(value);
-                //console.log("local list", tetrievedSuggestedItems);
-                //localStorage.setItem("lsSuggestedItems", JSON.stringify(tetrievedSuggestedItems));
-                sessionStorage.setItem("lsSuggestedItems", JSON.stringify(tetrievedSuggestedItems));
-                reloadDdl(tetrievedSuggestedItems);      
-            }
-        }else{
-            let tetrievedSuggestedItems = [];
-            tetrievedSuggestedItems.unshift(value);
-            console.log("Empty List", tetrievedSuggestedItems);
-            //localStorage.setItem("lsSuggestedItems", JSON.stringify(tetrievedSuggestedItems));
-            sessionStorage.setItem("lsSuggestedItems", JSON.stringify(tetrievedSuggestedItems));
-            reloadDdl(tetrievedSuggestedItems); 
-        }
-        
-    }
-
-    // reload the dropdownlist of search items
-    function reloadDdl(tetrievedSuggestedItems){
-
-        let list = document.getElementById('suggestionList');
-        list.innerHTML = "";
-        //console.log('local storage', tetrievedSuggestedItems);
-        if(tetrievedSuggestedItems){
-            tetrievedSuggestedItems.forEach(function(item){
-                let option = document.createElement('option');
-                option.value = item;
-                list.appendChild(option);
-            });
-        }
-    }
+    }    
 }
