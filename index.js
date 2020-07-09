@@ -3,12 +3,16 @@ window.onload = function(){
     const ui = new UI; 
     
     // execute this function when click the search button
-    const submitButton = () => {
+    const submitButton = (inputValue) => {
         // get the input value    
-        let ip      = document.getElementById("txtIP").value;
+        // let ip      = document.getElementById("txtIP").value;
         // const loader = document.querySelector('#lds-hourglass');
         // const result = document.querySelector('result');
-                        
+
+        let ip      = inputValue;
+        console.log("i am in submit" + ip); 
+        
+        
         // check the validity of ipv4 
         const checkValidIP = ip =>{
             let blocks = ip.split(".");
@@ -375,9 +379,26 @@ window.onload = function(){
             // for add cookie
             //addCookie(inputValue, tetrievedSuggestedItems);
             
-            submitButton();           
+            submitButton(inputValue);           
         }       
     });
+
+    // paste the text from the clipboard
+    input.onpaste = function(event) {
+        let inputValue = event.clipboardData.getData('text/plain');
+       // document.getElementById("txtIP").value = "";
+       // document.getElementById("txtIP").value = inputValue;
+       // if(inputValue){
+       //     document.getElementById("txtIP").value = '';
+       //     document.getElementById("txtIP").value = inputValue; 
+       // } 
+       // console.log("i am in onpaste" + inputValue);
+       submitButton(inputValue);
+   };
+   // if(document.execCommand("paste")){
+   //    console.log("You paste something");
+   // }
+   
     document.getElementById("btnSubmit").onclick=function(){
         let inputValue = input.value;
         // add value to localstorage
@@ -386,6 +407,6 @@ window.onload = function(){
         // for add cookie
         // addCookie(inputValue, tetrievedSuggestedItems);
 
-        submitButton();
+        submitButton(inputValue);
     }    
 }
