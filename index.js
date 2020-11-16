@@ -124,6 +124,7 @@ window.onload = function(){
             const ipValidityStatus = checkValidIP(ip);
             const ip6ValidityStatus = checkValidIPV6(ip);
             let asn ='';
+            let dType='IP';
             if(ipValidityStatus || ip6ValidityStatus){
                 // fetch the asn and display
                 // getASN(ip)
@@ -131,16 +132,18 @@ window.onload = function(){
                 //         //ui.displayASN(data);
                 //         asn = data; 
                 // });
-                //getApiData('https://rdap.db.ripe.net/ip/'+ip)
-                getApiData('https://rdap.org/ip/'+ip)                
-                .then(res => {
-                    ui.displayResult(res);
+                getApiData('https://rdap.db.ripe.net/ip/'+ip)
+                //getApiData('https://rdap.org/ip/'+ip)                
+                .then(res => {  
+                    ui.displayResult(res,dType);
                     })
                 .catch(err => {
                         // ui.displayResult(err);
                         document.getElementById("result").innerHTML = err;
                 })
             }else if(checkValidNameServer(ip)){
+                
+                let dType='Nameserver';
                 // fetch the IP inforamtion by the domain IP
                 getIPofDomain(ip)
                 .then(res => {
@@ -151,12 +154,15 @@ window.onload = function(){
                     // });
                     
                     //getApiData('https://rdap.db.ripe.net/ip/'+res)
-                    getApiData('https://rdap.org/ip/'+res)
-                    .then(res => {
+                    //getApiData('https://rdap.org/ip/'+res)
+                    //.then(resOrg => {
+                    getApiData('https://rdap.db.ripe.net/ip/'+res)
+                    .then(res =>{
                         //ui.displayResult(res,nsrecords);
-                        ui.displayResult(res);
-                        //console.log(nsrecords);
-                        })
+                        ui.displayResult(res,dType);
+                        //console.log(resOrg);
+                    })   
+                    //})
                     .catch(err => {
                         //ui.displayResult(res);
                         document.getElementById("result").innerHTML = err;
@@ -164,43 +170,46 @@ window.onload = function(){
                 })   
 
             }else if(checkValidDomain(ip)){
-                
+               
+                let dType='Domain';
                 // fetch the domain nameserver
-                let nsrecords="";
-                getNameServer(ip)
-                    .then(res=>{
-                        // this.console.log(res);
-                        nsrecords = res.DNSData.dnsRecords; 
-                       // this.console.log(nsrecords[0].additionalName);
-                    });    
+                // let nsrecords="";
+                // getNameServer(ip)
+                //     .then(res=>{
+                //         // this.console.log(res);
+                //         nsrecords = res.DNSData.dnsRecords; 
+                //        // this.console.log(nsrecords[0].additionalName);
+                //     });    
                 
                 // fetch the IP inforamtion by the domain IP
-               // getIPofDomain(ip)
-               // .then(res => {
+               //getIPofDomain(ip)
+               //.then(res => {
                     // getASN(res)
                     // .then(data=>{
                     //     //console.log(data);
                     //     asn = data; 
                     // });
-                    
                     //getApiData('https://rdap.db.ripe.net/ip/'+res)
+                    //getApiData('https://rdap.org/domain/'+ip)
+                    //.then(resOrg => {
+                        
+                    //getApiData('https://rdap.db.ripe.net/ip/'+res)
+                    //getApiData('https://rdap.verisign.com/com/v1/domain/'+ip)
                     getApiData('https://rdap.org/domain/'+ip)
-                    .then(res => {
+                    .then(res =>{
                         //ui.displayResult(res,nsrecords);
-                        ui.displayResult(res);
-                        console.log(nsrecords);
-                        })
-                    .catch(err => {
-                        //ui.displayResult(res);
-                        document.getElementById("result").innerHTML = err;
-                    })                
-              //  }) 
+                        ui.displayResult(res,dType);
+                        //console.log(resOrg);
+                    })   
+                    //})                
+                //}) 
             }else if (checkValidASN(ip)){
                 //getNetworkASN(ip)
+                let dType='ASN';
                 getApiData('https://rdap.org/autnum/'+ip)
                 .then(res => {
                     //ui.displayASNResult(res);
-                    ui.displayResult(res);
+                    ui.displayResult(res, dType);
                     })
                 .catch(err => {
                         // ui.displayResult(err);

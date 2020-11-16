@@ -7,6 +7,7 @@ class UI{
         let entityOutput='';
         //let getEntityList='';
         let singleEntityValue='';
+        //let diffDate=[];
     }
     
     displayASN(message){
@@ -19,6 +20,8 @@ class UI{
         container.insertBefore(div.beforeThis);
         
     }
+
+
  
     // for Entries List recursive
      
@@ -72,10 +75,34 @@ class UI{
       return this.singleEntityValue; 
     }
 
-    displayResult(res){
+    // date difference
+    getDateDifferance(firstDate, secondDate){ 
+      let difference = firstDate - secondDate;
+      //let reglengthInYear = (difference * 0.00000000038) / 12;
+      let totalDiffInDay = difference / (1000 * 3600 * 24);
+      let diffYear = Math.floor(totalDiffInDay/365);
+      let diffRestDays = Math.floor(totalDiffInDay%365);
+      let diffMonths = Math.floor(diffRestDays/30);
+      let diffDays = diffRestDays%30;
+      let diffDate=[diffYear,diffMonths,diffDays];
+      //console.log(diffDate);
+      return diffDate;
+    }
+
+    displayResult(res,dType){
        
+       console.log("dType",dType);
        console.log(res);
+       
        let dnsOutput='';
+       let ldhNameOutput='';
+       let countryOutput='';
+       let arinASNOutput='';
+       let parentOutput ='';
+       let statusOutput ='';
+       let ipVersionOutput='';
+       let blocksOutput='';
+       let regAgeOutput='';
        
         // ajv validator. rules for the domains status 
         var ajv = new Ajv(); // options can be passed, e.g. {allErrors: true}
@@ -108,31 +135,48 @@ class UI{
         }
         // close ajv validator and rules or policy
 
-        // destructuring the res object
-        let {arin_originas0_originautnums,country,cidr0_cidrs,endAddress,entities,events,remarks,handle,ipVersion,links,name,notices,objectClassName,nameservers,ldhName,parentHandle,port43,rdapConformance,startAddress,status,type} = res;
+      
+      // destructuring the res object
+      let {arin_originas0_originautnums,country,cidr0_cidrs,endAddress,entities,events,remarks,handle,ipVersion,links,name,objectClassName,notices,nameservers,ldhName,parentHandle,port43,rdapConformance,startAddress,status,type} = res;
       //  let {entities,events,handle,links,notices,objectClassName,ldhName,nameservers,status} = res;
-        
+      
+       
+      // if(typeof dType === 'object' && dType !== null){
+      //   country = dType.country;
+      //   nameservers = dType.nameservers;
+      //   ldhName = dType.ldhName;
+      //   events=dType.events;
+      //   //console.log('i am in object',country,events,nameservers,ldhName);
+      // }
+      
+      //console.log('i am out object',country,events,nameservers,ldhName);
         // for objectClassName
-        if(objectClassName == undefined){
-          objectClassName='Not available';
-        }
+        // if(objectClassName == undefined){
+        //   objectClassName='Not available';
+        // }
 
         // for ldhName
-        if(ldhName == undefined){
-          ldhName='Not available';
-        }
+        // if(ldhName == undefined){
+        //   ldhName='Not available';
+        // }
 
-        
+        // for ldh Name information
+        if(ldhName!='' && ldhName!= undefined){  
+          ldhNameOutput='<dt class="col-sm-3 bg-primary">Domain Name</dt><dd class="col-sm-9 bg-primary">';
+          ldhNameOutput += `${ldhName}`;
+          ldhNameOutput +='</dd>';
+        } 
 
-        // for objectClassName
-        if(objectClassName == undefined){
-          objectClassName='Not available';
-        }
+      
+        // // for objectClassName
+        // if(objectClassName == undefined){
+        //   objectClassName='Not available';
+        // }
 
         // for dns information of a domain
         if(nameservers!='' && nameservers!=undefined){
              
-          dnsOutput='<dt class="col-sm-3">DNS Records</dt><dd class="col-sm-9">';
+          dnsOutput='<dt class="col-sm-3 bg-info">Nameservers</dt><dd class="col-sm-9 bg-info">';
           nameservers.forEach(element => {
             
             // destructure the nsrecords
@@ -148,42 +192,73 @@ class UI{
         let ip = document.getElementById('txtIP').value;
             
 
-        let noticeOutput,eventsOutput,linksOutput,entityOutput,mainEventsOutput,mainLinksOutput,arinASNOutput,blocksOutput,statusesOutput,remarkOutput;
-        noticeOutput=eventsOutput=linksOutput=entityOutput=mainEventsOutput=mainLinksOutput=arinASNOutput=blocksOutput=statusesOutput=remarkOutput='Not available';
+        let noticeOutput,eventsOutput,linksOutput,entityOutput,mainEventsOutput,mainLinksOutput,statusesOutput,remarkOutput;
+        noticeOutput=eventsOutput=linksOutput=entityOutput=mainEventsOutput=mainLinksOutput=statusesOutput=remarkOutput='Not available';
 
+        
+        // for IP Version
+        if(ipVersion!='' && ipVersion!= undefined){  
+          ipVersionOutput='<dt class="col-sm-3 bg-info">IP Version</dt><dd class="col-sm-9 bg-info">';
+          ipVersionOutput += `${ipVersion}`;
+          ipVersionOutput +='</dd>';
+        } 
+        
         // for ASN number
-        if(arin_originas0_originautnums != undefined){
-          arinASNOutput='';
+        if(arin_originas0_originautnums != undefined && arin_originas0_originautnums.length>0){
+          arinASNOutput +='<dt class="col-sm-3 bg-primary">ASN</dt><dd class="col-sm-9 bg-primary">';
           arin_originas0_originautnums.forEach(element => {
             arinASNOutput +=element+"<br>";     
           });
+          arinASNOutput+='</dd>';
         }
         
-        // for country
-        if(country == undefined){
-          country='Not available';
-        }
+        // for Country information
+        if(country!='' && country!= undefined){  
+          countryOutput='<dt class="col-sm-3 bg-primary">Country</dt><dd class="col-sm-9 bg-primary">';
+          countryOutput += `${country}`;
+          countryOutput +='</dd>';
+        } 
 
         // for parent Handle
-        if(parentHandle == undefined){
-          parentHandle='Not available';
+        if(parentHandle!='' && parentHandle!= undefined){  
+          parentOutput='<dt class="col-sm-3" bg-primary>Parent</dt><dd class="col-sm-9 bg-primary">';
+          parentOutput += `${parentHandle}`;
+          parentOutput +='</dd>';
         }
         
         // for Statuses
-        if(status != undefined){
-          statusesOutput='';
+        // if(status != undefined){
+        //   statusesOutput='';
+        //   status.forEach(element => {
+        //     statusesOutput += element + '<br>';
+        //   });
+        // }
+
+        if(status != undefined && status.length>0){
+          statusOutput +='<dt class="col-sm-3 bg-info">Status</dt><dd class="col-sm-9 bg-info">';
           status.forEach(element => {
-            statusesOutput += element + '<br>';
+            statusOutput +=element+"<br>";     
           });
+          statusOutput+='</dd>';
         }
 
+
+
         // for block information
-       if(cidr0_cidrs != undefined){
-          blocksOutput='';
-          cidr0_cidrs.forEach(element => {
-            blocksOutput += element.v4prefix + '/' + element.length;
-          });
-       }
+      //  if(cidr0_cidrs != undefined){
+      //     blocksOutput='';
+      //     cidr0_cidrs.forEach(element => {
+      //       blocksOutput += element.v4prefix + '/' + element.length;
+      //     });
+      //  }
+
+       if(cidr0_cidrs != undefined && cidr0_cidrs.length>0){
+        blocksOutput +='<dt class="col-sm-3 bg-primary">IP Block Information</dt><dd class="col-sm-9 bg-primary">';
+        cidr0_cidrs.forEach(element => {
+          blocksOutput +=element.v4prefix + '/' + element.length;     
+        });
+        blocksOutput+='</dd>';
+      }
         
        // for main event list
        if(events != undefined){
@@ -191,19 +266,42 @@ class UI{
           events.forEach(element => {
                 // Destructure the single event
                 let {eventAction,eventDate}=element;
-                
-                
                 if(eventAction === "registration"){
                     // check the registration tenure
                     let now = new Date();
-                    let date = new Date( Date.parse(eventDate) );
-                    let difference = now - date ;
-                    let reglength = (difference * 0.00000000038) / 12;
-                    if(reglength > 2){
+                    let regDate = new Date( Date.parse(eventDate) );
+                    //let regAge=[];
+                    let regAge = this.getDateDifferance(now, regDate);
+                    
+                    //console.log(regAge); 
+
+                    //let difference = now - regDate ;
+                    //let reglengthInYear = (difference * 0.00000000038) / 12;
+                    //let regAgeInDay = difference / (1000 * 3600 * 24);
+                    
+                    if(regAge[0]>1){
+
+                    }
+                    
+
+                    //console.log(regAge[0]+'YEARS',regAge[1]+'MONTHS', regAge[2]+'DAYS',reglengthInYear);
+
+                    if(regAge[0] > 1){
                       chrome.tabs.getSelected(null,function(tab) {
                             // to change the icon
-                            chrome.browserAction.setIcon({tabId: tab.id,path:"img/green-isif.png"});    
-                        })  
+                            chrome.browserAction.setIcon({tabId: tab.id,path:"img/rdap-logo-green.png"});    
+                        })
+                      regAgeOutput=`<dt class="col-sm-3 bg-success"> ${dType} Age: </dt><dd class="col-sm-9 bg-success">`;
+                      regAgeOutput += `${regAge[0]} years ${regAge[1]} months and ${regAge[2]} days`;
+                      regAgeOutput +='</dd>';    
+                    }else{
+                      chrome.tabs.getSelected(null,function(tab) {
+                        // to change the icon
+                            chrome.browserAction.setIcon({tabId: tab.id,path:"img/rdap-logo-red.png"});    
+                        })
+                      regAgeOutput=`<dt class="col-sm-3 bg-danger"> ${dType} Age: </dt><dd class="col-sm-9 bg-danger">`;
+                      regAgeOutput += `${regAge[0]} years ${regAge[1]} months and ${regAge[2]} days`;
+                      regAgeOutput +='</dd>';
                     }
                 }
 
@@ -312,53 +410,37 @@ class UI{
     let output = `
         <div class="card bg-light mt-2 mb-3">
             <div class="card-header">Network Informations</div>
-            <div class="card-body">
-
-            
+            <div class="card-body">  
             <dl class="row">
-            <dt class="col-sm-3">Object Name</dt>
-            <dd class="col-sm-9">${objectClassName}</dd>
-            <dt class="col-sm-3">LDH Name</dt>
-            <dd class="col-sm-9">${ldhName}</dd>
+            ${regAgeOutput}
+            ${ldhNameOutput}
+           ${ipVersionOutput}
             ${dnsOutput}
-            <dt class="col-sm-3">Net Range</dt>
-            <dd class="col-sm-9">${startAddress} - ${endAddress} </dd>
-
-            <dt class="col-sm-3">ASN</dt>
-            <dd class="col-sm-9">
+            <dt class="col-sm-3 bg-primary">Important Dates</dt>
+            <dd class="col-sm-9 bg-primary">${mainEventsOutput}</dd>
             ${arinASNOutput}
-            </dd>
-             
-            <dt class="col-sm-3">Netname</dt>
-            <dd class="col-sm-9">${name}</dd>
-
-            <dt class="col-sm-3 text-truncate">Country</dt>
-            <dd class="col-sm-9">${country}</dd>
-
-            <dt class="col-sm-3">Status</dt>
-            <dd class="col-sm-9">${statusesOutput}</dd>
-
-            <dt class="col-sm-3">Type</dt>
-            <dd class="col-sm-9">${type}</dd>
-            <dt class="col-sm-3">Block</dt>
-            <dd class="col-sm-9">${blocksOutput}</dd>
-            <dt class="col-sm-3">Handle</dt>
-            <dd class="col-sm-9">${handle}</dd>
-            <dt class="col-sm-3">Parent</dt>
-            <dd class="col-sm-9">${parentHandle}</dd>
-            
-            <dt class="col-sm-3">Port 43 Whois</dt>
-            <dd class="col-sm-9">${port43}</dd>
-            <dt class="col-sm-3">Events</dt>
-            <dd class="col-sm-9">${mainEventsOutput}</dd>
-            <dt class="col-sm-3">Links</dt>
-            <dd class="col-sm-9">${mainLinksOutput}</dd>
-            <dt class="col-sm-3">Notices</dt>
-            <dd class="col-sm-9">${noticeOutput}</dd>
-            <dt class="col-sm-3">Remarks</dt>
-            <dd class="col-sm-9">${remarkOutput}</dd>
-            <dt class="col-sm-3">Entities</dt>
-            <dd class="col-sm-9">${entityOutput}</dd>
+            ${statusOutput}
+            <dt class="col-sm-3 bg-primary">Notices</dt>
+            <dd class="col-sm-9 bg-primary">${noticeOutput}</dd>
+            <dt class="col-sm-3 bg-info">Links</dt>
+            <dd class="col-sm-9 bg-info">${mainLinksOutput}</dd>
+            <dt class="col-sm-3 bg-primary">Remarks</dt>
+            <dd class="col-sm-9 bg-primary">${remarkOutput}</dd>
+            <dt class="col-sm-3 bg-info">Netname</dt>
+            <dd class="col-sm-9 bg-info">${name}</dd>
+            <dt class="col-sm-3 bg-primary">Net Range</dt>
+            <dd class="col-sm-9 bg-primary">${startAddress} - ${endAddress}</dd>
+            ${countryOutput}
+            <dt class="col-sm-3 bg-info">Type</dt>
+            <dd class="col-sm-9 bg-info">${type}</dd>
+            ${blocksOutput}
+            <dt class="col-sm-3 bg-primary">Handle</dt>
+            <dd class="col-sm-9 bg-primary">${handle}</dd>
+            ${parentOutput}
+            <dt class="col-sm-3 bg-info">Port 43 Whois</dt>
+            <dd class="col-sm-9 bg-info">${port43}</dd>
+            <dt class="col-sm-3 bg-primary">Entities</dt>
+            <dd class="col-sm-9 bg-primary">${entityOutput}</dd>
           </dl>
                       
         </div>
