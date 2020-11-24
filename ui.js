@@ -140,7 +140,8 @@ class UI{
       let {arin_originas0_originautnums,country,cidr0_cidrs,endAddress,entities,events,remarks,handle,ipVersion,links,name,objectClassName,notices,nameservers,ldhName,parentHandle,port43,rdapConformance,startAddress,status,type} = res;
       //  let {entities,events,handle,links,notices,objectClassName,ldhName,nameservers,status} = res;
       
-       
+
+             
       // if(typeof dType === 'object' && dType !== null){
       //   country = dType.country;
       //   nameservers = dType.nameservers;
@@ -162,7 +163,7 @@ class UI{
 
         // for ldh Name information
         if(ldhName!='' && ldhName!= undefined){  
-          ldhNameOutput='<dt class="col-sm-3 bg-primary">Domain Name</dt><dd class="col-sm-9 bg-primary">';
+          ldhNameOutput='<dt class="col-sm-3 bg-dark text-white">Domain Name</dt><dd class="col-sm-9 bg-secondary">';
           ldhNameOutput += `${ldhName}`;
           ldhNameOutput +='</dd>';
         } 
@@ -176,7 +177,7 @@ class UI{
         // for dns information of a domain
         if(nameservers!='' && nameservers!=undefined){
              
-          dnsOutput='<dt class="col-sm-3 bg-info">Nameservers</dt><dd class="col-sm-9 bg-info">';
+          dnsOutput='<dt class="col-sm-3 bg-dark text-white">Nameservers</dt><dd class="col-sm-9 bg-secondary">';
           nameservers.forEach(element => {
             
             // destructure the nsrecords
@@ -198,14 +199,14 @@ class UI{
         
         // for IP Version
         if(ipVersion!='' && ipVersion!= undefined){  
-          ipVersionOutput='<dt class="col-sm-3 bg-info">IP Version</dt><dd class="col-sm-9 bg-info">';
+          ipVersionOutput='<dt class="col-sm-3 bg-dark text-white">IP Version</dt><dd class="col-sm-9 bg-secondary">';
           ipVersionOutput += `${ipVersion}`;
           ipVersionOutput +='</dd>';
         } 
         
         // for ASN number
         if(arin_originas0_originautnums != undefined && arin_originas0_originautnums.length>0){
-          arinASNOutput +='<dt class="col-sm-3 bg-primary">ASN</dt><dd class="col-sm-9 bg-primary">';
+          arinASNOutput +='<dt class="col-sm-3 bg-dark text-white">ASN</dt><dd class="col-sm-9 bg-secondary">';
           arin_originas0_originautnums.forEach(element => {
             arinASNOutput +=element+"<br>";     
           });
@@ -214,14 +215,14 @@ class UI{
         
         // for Country information
         if(country!='' && country!= undefined){  
-          countryOutput='<dt class="col-sm-3 bg-primary">Country</dt><dd class="col-sm-9 bg-primary">';
+          countryOutput='<dt class="col-sm-3 bg-dark text-white">Country</dt><dd class="col-sm-9 bg-secondary">';
           countryOutput += `${country}`;
           countryOutput +='</dd>';
         } 
 
         // for parent Handle
         if(parentHandle!='' && parentHandle!= undefined){  
-          parentOutput='<dt class="col-sm-3" bg-primary>Parent</dt><dd class="col-sm-9 bg-primary">';
+          parentOutput='<dt class="col-sm-3" bg-dark text-white>Parent</dt><dd class="col-sm-9 bg-secondary">';
           parentOutput += `${parentHandle}`;
           parentOutput +='</dd>';
         }
@@ -235,7 +236,7 @@ class UI{
         // }
 
         if(status != undefined && status.length>0){
-          statusOutput +='<dt class="col-sm-3 bg-info">Status</dt><dd class="col-sm-9 bg-info">';
+          statusOutput +='<dt class="col-sm-3 bg-dark text-white">Status</dt><dd class="col-sm-9 bg-secondary">';
           status.forEach(element => {
             statusOutput +=element+"<br>";     
           });
@@ -253,7 +254,7 @@ class UI{
       //  }
 
        if(cidr0_cidrs != undefined && cidr0_cidrs.length>0){
-        blocksOutput +='<dt class="col-sm-3 bg-primary">IP Block Information</dt><dd class="col-sm-9 bg-primary">';
+        blocksOutput +='<dt class="col-sm-3 bg-dark text-white">IP Block Information</dt><dd class="col-sm-9 bg-secondary">';
         cidr0_cidrs.forEach(element => {
           blocksOutput +=element.v4prefix + '/' + element.length;     
         });
@@ -414,39 +415,49 @@ class UI{
             <dl class="row">
             ${regAgeOutput}
             ${ldhNameOutput}
-           ${ipVersionOutput}
+            ${ipVersionOutput}
             ${dnsOutput}
-            <dt class="col-sm-3 bg-primary">Important Dates</dt>
-            <dd class="col-sm-9 bg-primary">${mainEventsOutput}</dd>
+            <dt class="col-sm-3 bg-dark text-white">Important Dates</dt>
+            <dd class="col-sm-9 bg-secondary">${mainEventsOutput}</dd>
             ${arinASNOutput}
             ${statusOutput}
-            <dt class="col-sm-3 bg-primary">Notices</dt>
-            <dd class="col-sm-9 bg-primary">${noticeOutput}</dd>
-            <dt class="col-sm-3 bg-info">Links</dt>
-            <dd class="col-sm-9 bg-info">${mainLinksOutput}</dd>
-            <dt class="col-sm-3 bg-primary">Remarks</dt>
-            <dd class="col-sm-9 bg-primary">${remarkOutput}</dd>
-            <dt class="col-sm-3 bg-info">Netname</dt>
-            <dd class="col-sm-9 bg-info">${name}</dd>
-            <dt class="col-sm-3 bg-primary">Net Range</dt>
-            <dd class="col-sm-9 bg-primary">${startAddress} - ${endAddress}</dd>
+            <dt class="col-sm-3 bg-dark text-white">Notices</dt>
+            <dd class="col-sm-9 bg-secondary">${noticeOutput}</dd>
+            <dt class="col-sm-3 bg-dark text-white">Links</dt>
+            <dd class="col-sm-9 bg-secondary ">${mainLinksOutput}</dd>
+            <dt class="col-sm-3 bg-dark text-white">Remarks</dt>
+            <dd class="col-sm-9 bg-secondary">${remarkOutput}</dd>
+            <dt class="col-sm-3 bg-dark text-white">Netname</dt>
+            <dd class="col-sm-9 bg-secondary">${name}</dd>
+            <dt class="col-sm-3 bg-dark text-white">Net Range</dt>
+            <dd class="col-sm-9 bg-secondary">${startAddress} - ${endAddress}</dd>
             ${countryOutput}
-            <dt class="col-sm-3 bg-info">Type</dt>
-            <dd class="col-sm-9 bg-info">${type}</dd>
+            <dt class="col-sm-3 bg-dark text-white">Type</dt>
+            <dd class="col-sm-9 bg-secondary">${type}</dd>
             ${blocksOutput}
-            <dt class="col-sm-3 bg-primary">Handle</dt>
-            <dd class="col-sm-9 bg-primary">${handle}</dd>
+            <dt class="col-sm-3 bg-dark text-white">Handle</dt>
+            <dd class="col-sm-9 bg-secondary">${handle}</dd>
             ${parentOutput}
-            <dt class="col-sm-3 bg-info">Port 43 Whois</dt>
-            <dd class="col-sm-9 bg-info">${port43}</dd>
-            <dt class="col-sm-3 bg-primary">Entities</dt>
-            <dd class="col-sm-9 bg-primary">${entityOutput}</dd>
+            <dt class="col-sm-3 bg-dark text-white">Port 43 Whois</dt>
+            <dd class="col-sm-9 bg-secondary">${port43}</dd>
+            <dt class="col-sm-3 bg-dark text-white">Entities</dt>
+            <dd class="col-sm-9 bg-light"><div id="jsonResult"></div></dd>
           </dl>
                       
         </div>
          `;
 
         document.getElementById('result').innerHTML=output;
+        
+        // for jsonformatter
+       // console.log(entities);
+       // console.log(typeof(entities));
+        const formatter = new JSONFormatter(entities);
+        // document.body.appendChild(formatter.render());
+        document.getElementById('jsonResult').appendChild(formatter.render()); 
+        //var displayJsonEntities = formatter.render();
+        formatter.openAtDepth(10);
+
     }
 
     displayASNResult(res){
